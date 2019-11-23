@@ -1,0 +1,90 @@
+﻿@{
+    ViewBag.Title = "整车销退管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/biz4s/JS/VehicleReturnApply/VehicleReturnApplyList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_1 lbl">
+        客户名称：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.CustomerName" />
+    </div>
+    <div class="grid_1 lbl">
+        单据状态：
+    </div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('AuditStatus'),comboboxValue:form.F_State" class="easyui-combobox" data-options="editable:false" style="width:170px" />
+    </div>
+    <div class="grid_1 lbl">
+        销退日期：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form.SaleBackDate" class="easyui-daterange" style="width:170px" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_2 val" style="text-align:right">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">
+        申请单号：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.Vehicle_ReturnCode" />
+    </div>
+    <div class="grid_1 lbl">
+        销售单号：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.SaleOrderCode" />
+    </div>
+    <div class="grid_1 lbl">
+        VIN：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.VIN" />
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+</div>
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'ID',align:'center',sortable:false, width:80" hidden></th>
+            <th data-options="field:'F_StateName',align:'center',sortable:false, width:100">单据状态</th>
+            <th data-options="field:'Vehicle_ReturnCode',align:'center',sortable:true, width:150">单据编号</th>
+            <th data-options="field:'SaleOrderCode',align:'center',sortable:true, width:150">销售单号</th>
+            <th data-options="field:'SaleBackDate',align:'center',sortable:true, width:100" formatter="com.formatTime">申请日期</th>
+            <th data-options="field:'CustomerName',sortable:true,align:'right',width:100">客户名称</th>
+            <th data-options="field:'Amount',sortable:true,align:'center',width:100">销退金额</th>
+            <th data-options="field:'InputName',sortable:true,align:'center',width:100">制单人</th>
+            <th data-options="field:'InputTime',align:'center',sortable:true, width:100" formatter="com.formatTime">制单时间</th>
+            <th data-options="field:'AuditName',sortable:true,align:'center',width:100">审核人</th>
+            <th data-options="field:'AuditTime',align:'center',sortable:true, width:100" formatter="com.formatTime">审核日期</th>
+        </tr>
+    </thead>
+</table>

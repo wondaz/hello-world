@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "车辆维修结算管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Settle/SettlementList.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div id="condition" class="container_16" style="position:relative;">
+    <div class="grid_3 val">
+        结算单号：
+        <input class="z-txt easyui-validatebox" data-bind="value:form.BalanceCode">
+    </div>
+    <div class="grid_3 val">
+        车牌号：
+        <input class="z-txt easyui-validatebox" data-bind="value:form.SignCode">
+    </div>
+    <div class="grid_3 val">
+        结算日期：
+        <input type="text" data-bind="value:form.InputTime" class="z-txt easyui-daterange" />
+    </div>
+    <div class="grid_3 val">
+        单据状态：
+        <input data-bind="datasource:com.bindCombobox('SettleStatus'),comboboxValue:form.BillState" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>*@
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>*@
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'BillStateName',align:'center',sortable:false, width:70">单据状态</th>
+            <th data-options="field:'IsPayName',align:'center',sortable:false, width:60">付款</th>
+            <th data-options="field:'BalanceCode',align:'center',sortable:true, width:120">结算单号</th>
+            <th data-options="field:'SignCode',align:'center',sortable:true, width:80">车牌号</th>
+            @*<th data-options="field:'InputTime',align:'center',sortable:true, width:150" formatter="com.formatTime">结算时间</th>*@
+            <th data-options="field:'CustomerName',align:'center',sortable:true, width:70">顾客姓名</th>
+            <th data-options="field:'EmpName',align:'center',sortable:true, width:80">服务顾问</th>
+            <th data-options="field:'VIN',align:'center',sortable:true, width:140">VIN</th>
+            <th data-options="field:'AgioManHourFee',align:'right',sortable:true, width:90">折后工时费</th>
+            <th data-options="field:'AgioSparepartFee',align:'right',sortable:true, width:90">折后备件费</th>
+            <th data-options="field:'AddonsFee',align:'right',sortable:true, width:60">附加费</th>            
+            <th data-options="field:'CounterclaimSum',align:'right',sortable:true, width:70">索赔金额</th>
+            <th data-options="field:'InsuranceSum',align:'right',sortable:true, width:70">保险金额</th>
+            <th data-options="field:'BosomSum',align:'right',sortable:true, width:70">损耗金额</th>            
+            <th data-options="field:'AccountReceivable',align:'right',sortable:true, width:70">现金金额</th>
+            <th data-options="field:'EarningSum',align:'right',sortable:true, width:70">实收金额</th>
+            <th data-options="field:'TaxForMerSum',align:'right',sortable:true, width:70">总金额</th>
+            <th data-options="field:'InputName',align:'center',sortable:true, width:80">制单人</th>
+            <th data-options="field:'InputTime',align:'center',sortable:true, width:130" formatter="com.formatTime">制单日期</th>
+            <th data-options="field:'AuditName',align:'center',sortable:true, width:80">审核人</th>
+            <th data-options="field:'AuditTime',align:'center',sortable:true, width:130" formatter="com.formatTime">审核日期</th>
+        </tr>
+    </thead>
+</table>

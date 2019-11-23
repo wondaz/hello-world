@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="StockOutList" defaultOrderBy='a.InputTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      a.[StockOutID],
+      a.[OriType],
+      a.OriCode,
+      a.[StockOutCode],
+      dbo.f_Getcodename('备件出库类型',a.TradeType) TradeType,
+      a.[OutTime],
+      a.[StockID],
+      a.CorpManager,
+      b.StockName,
+      a.[CorpManager],
+      a.[CustomerID],
+      d.CustomerName,
+      d.MobileTel,
+      d.[Address],
+      a.[Remark],
+      a.[TotalAmount],
+      a.BillState,
+      CASE WHEN a.BillState=1 then '已审' ELSE '未审' END BillStateName,
+      a.[InputTime],
+      a.[InputName],
+      a.[AuditName],
+      a.[AuditTime],
+      ISNULL(v.IsUnderStock,0) IsUnderStock
+    </select>
+    <from>
+      P_StockOutHead AS a
+      LEFT JOIN Base_Stock AS b ON a.StockID = b.StockID
+      LEFT JOIN B_Customer AS d ON a.CustomerID = d.CustomerID
+      LEFT JOIN view_partsOutStock v ON a.StockOutCode = v.BillCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true'>
+      <field name='a.CorpID' cp='equal'></field>
+      <field name='a.StockID' cp='equal'></field>
+      <field name='a.OutTime' cp='daterange'></field>
+      <field name='a.TradeType' cp='equal'></field>
+      <field name='d.CustomerName' cp='like'></field>
+      <field name='a.BillState' cp='equal'></field>
+      <field name='a.StockOutCode' cp='like'></field>
+    </where>
+  </settings>
+
+  <settings name="InventoryList" defaultOrderBy='a.SparePartCode'>
+    <module>DMS_4S</module>
+    <select>
+      a.[SparePartCode],
+      a.SparePartName,
+      a.Spec,
+      a.Unit,
+      a.[Upper],
+      a.[Lower],
+      a.[StockID],
+      s.StockName,
+      a.[Price],
+      a.Quantity,
+      c.PartTypeName,
+      d.OrderPartsQty,
+      ISNULL(a.Quantity,0)-ISNULL(d.OrderPartsQty,0) UsableQty
+    </select>
+    <from>
+      P_AssemStorage AS a
+      LEFT JOIN B_SparePartType c ON a.PartTypeID = c.PartTypeID
+      LEFT JOIN Base_Stock s ON a.StockID=s.StockID
+      LEFT JOIN
+      (
+      SELECT d.CorpID,
+      d.SparePartCode,
+      SUM(d.Quantity) OrderPartsQty
+      FROM P_SellOrderDetail d
+      INNER JOIN P_SellOrderHead h ON d.SellOrderCode = h.SellOrderCode
+      WHERE h.BillState = 1
+      AND IsPay = 1
+      AND IsOut = 0
+      GROUP BY d.CorpID,d.SparePartCode
+      ) d ON d.SparePartCode = a.SparePartCode
+      AND d.corpID = a.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true'>
+      <field name='a.SparePartCode' cp='like'></field>
+      <field name='a.SparePartName' cp='like'></field>
+      <field name='a.CorpID'        cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

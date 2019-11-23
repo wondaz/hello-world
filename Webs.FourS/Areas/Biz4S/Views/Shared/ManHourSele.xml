@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="ManHourList" defaultOrderBy='ManHourCode DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.ManHourID,
+      A.ManHourCode,
+      A.MaintainType as MaintainTypeName
+      ,B.SeriesName,C.ModelName,A.ManHour,A.AddonsManHour,A.DispatchManHour
+      ,A.Remark,A.ManHourDescribe
+    </select>
+    <from>
+      S_ManHour as A
+      left join B_AutoSeries B on A.SeriesID=B.SeriesID
+      left join B_AutoModel C on c.ModelID=A.ModelID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.ManHourCode' cp='equal'></field>
+      <field name='A.SeriesID' cp='equal'></field>
+      <field name='A.ModelID' cp='equal'></field>
+      <field name='A.CorpID' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

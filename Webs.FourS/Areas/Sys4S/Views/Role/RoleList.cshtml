@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "角色管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Sys4s/JS/Role.js"></script>
+    <script type="text/javascript">
+        using('validatebox');
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+        var formatterPermit = function (value, row) {
+            var html = '<a href="#" onclick=\'permissionTab(' + JSON.stringify(row) + ')\'><span class="icon icon-set1">&nbsp;</span>角色权限</a>';
+            return html;
+        };
+
+        function cellStyler(value,row,index){
+            //if (row.ParentCode === 0){
+           //     return "visibility:hidden";
+           // }
+        }
+    </script>
+}
+<input type="text" class="easyui-validatebox" hidden />
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-edit" data-bind="click:editClick" title="编辑">编辑</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-cross" title="删除" data-bind="click:deleteClick">删除</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" data-bind="click:saveClick" title="保存">保存</a>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'CorpID'" hidden></th>
+            <th data-options="field:'RoleID'" hidden></th>
+            <th data-options="field:'IsSystemRole'" hidden></th>
+            @*<th data-options="field:'RoleCode',align:'left',width:120" editor="{type:'validatebox',options:{required: true }}">角色编码 </th>*@
+            <th data-options="field:'RoleName',align:'center',width:180" editor="{type:'validatebox',options:{required: true }}">角色名称</th>
+            <th data-options="field:'Description',align:'center',width:150" editor="text">描述</th>
+            <th data-options="field:'RoleType',align:'center',width:100" >角色类型</th>
+            <th data-options="field:'UpdatePerson',align:'center',sortable:true, width:120">创建人</th>
+            <th data-options="field:'UpdateDate',align:'center',sortable:true, width:140" formatter="com.formatTime">创建时间</th>
+            <th data-options="field:'Permit',align:'center',width:180" formatter="formatterPermit">操作</th>
+        </tr>
+    </thead>
+</table>
+
+<script type="text/html" id="permission-template">
+    <div class="container" style="margin: 5px; height: 380px;">
+        <div>
+            <span class="icon32 icon-group32" style="padding-left: 48px; font-weight: bold; font-size: 14px; color: #666;" data-bind="text:role.RoleName">角色名称</span>
+            <span data-bind="text:role.Description" style="margin-left: 10px;"></span>
+        </div>
+
+        <div class="easyui-tabs" data-bind="easyuiTabs:tab">
+            <div title="菜单权限">
+                <table id="menuGridlist" data-bind="treegrid:grid">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'chk',checkbox:true,styler:cellStyler"></th>
+                            <th data-options="field:'MenuName',align:'left',width:180">菜单</th>
+                            <th data-options="field:'MenuCode',align:'left',width:100">编码</th>
+                            <th data-options="field:'Description',align:'left',width:100">备注</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div title="按钮权限">
+                <table data-bind="treegrid:grid2"></table>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center;clear:both">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">确定</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">取消</a>
+    </div>
+</script>

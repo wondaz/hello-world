@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="insuranceList" defaultOrderBy='BillState DESC,InsSaleCode DESC'>
+    <module>DMS_4S</module>
+    <select>
+      a.BillState,
+      dbo.f_Getcodename('审核状态',a.BillState) BillStateName,
+      a.InsSaleCode,
+      a.InsOrderCode,
+      a.SignCode,
+      b.CustomerName AS CustomerName,
+      a.TranMan,
+      a.TranDate,
+      a.InputName,
+      a.InputTime,
+      a.AuditName,a.AuditTime,a.InsSaleID
+    </select>
+    <from>
+      A_InsSale as a
+      left join B_Customer as b on a.CustomerID=b.CustomerID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.InsSaleCode' cp='like'></field>
+      <field name='CustomerName' cp='like'></field>
+      <field name='a.BillState' cp='equal'></field>
+      <field name='a.SignCode' cp='like'></field>
+      <field name='a.TranDate' cp='daterange'></field>
+      <field name='a.InsOrderCode' cp='like'></field>
+      <field name='A.CorpID' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

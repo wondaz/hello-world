@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "编辑企业信息";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Sys4s/JS/CorpEdit.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        using(['validatebox','combobox']);
+        var viewModel = function () {
+            var loginCode = '';
+            var getUserCode = function (shortName) {
+                com.ajax({
+                    type: 'GET',
+                    async: false,
+                    url: vmodel.urls.spellCode + shortName,
+                    success: function (d) {
+                        loginCode = d;
+
+                        if (d.isexist) {
+                            vmodel.tipUserCode('账号已存在');
+                        }
+                        else {
+                            vmodel.tipUserCode('');
+                        }
+                    }
+                });
+
+                return loginCode;
+            };
+
+            this.checkUserCode = function(){
+                //新增
+                if (vmodel.keyVal === 0) {
+                    vmodel.form.UserCode = ko.computed({
+                        read: function () {
+                            var shortName = vmodel.form.CorpShortName();
+                            if (shortName && vmodel.keyVal === 0) {
+                                return getUserCode(shortName);
+                            }
+                            return '';
+                        },
+                        write: function (value) {
+                            if (self.keyVal === 0) {
+                                getUserCode(value);
+                            }
+                        },
+                        owner: this
+                    });
+                }
+                else{
+                    vmodel.readonly(true);
+                };
+            };
+
+            vms.edit.apply(this, arguments);
+        };
+
+        var vmodel = new viewModel(vdata);
+        ko.bindingViewModel(vmodel);
+
+        $(function(){
+            vmodel.checkUserCode();
+        });
+    </script>
+}
+<div class="z-toolbar">
+    <a id="a_save" href="#" plain="true" class="easyui-linkbutton" icon="icon-save" data-bind="click:saveClick" title="保存">保存</a>
+    <div class="datagrid-btn-separator"></div>
+</div>
+
+<div id="master" class="container_16" data-bind="inputwidth:0.9">
+    @*<input type="text" data-bind="value:form.CollaborationID" hidden />*@
+    <input type="text" data-bind="value:form.AreaID" hidden />
+
+    <div class="grid_2 lbl required">企业名称</div>
+    <div class="grid_4 val">
+        <input type="text" data-bind="value:form.CorpName" class="easyui-validatebox z-txt" data-options="required:true,validType:'length[4,50]'" />
+    </div>
+    <div class="grid_2 lbl required">地址</div>
+    <div class="grid_4 val ">
+        <input type="text" data-bind="value:form.CorpAddress" class="easyui-validatebox z-txt" data-options="required:true,validType:'length[4,100]'" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl required">企业简称</div>
+    <div class="grid_4 val ">
+        <input type="text" id="txtShortName" data-bind="value:form.CorpShortName" class="easyui-validatebox z-txt" data-options="required:true,validType:'length[4,10]'" />
+    </div>
+    <div class="grid_2 lbl required">登录账号</div>
+    <div class="grid_4 val">
+        <input type="text" data-bind="value:form.UserCode,readOnly:readonly" class="easyui-validatebox z-txt" data-options="required:true,validType:'length[4,10]'" />
+        <span style="font-size:14px;color:#ff0000;" data-bind="text:tipUserCode"></span>
+    </div>
+
+    <div class="clear"></div>
+    <div class="grid_2 lbl" required>联系人</div>
+    <div class="grid_4 val">
+        <input type="text" data-bind="value:form.CorpContact" class="easyui-validatebox z-txt" data-options="required:true,validType:'length[2,10]'" />
+    </div>
+    <div class="grid_2 lbl required">联系电话</div>
+    <div class="grid_4 val ">
+        <input type="text" data-bind="value:form.CorpPhone" class="easyui-validatebox z-txt" data-options="required:true,validType:'length[7,20]'" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl">传真</div>
+    <div class="grid_4 val">
+        <input type="text" data-bind="value:form.CorpFax" class="z-txt" />
+    </div>
+    <div class="grid_2 lbl">企业编码</div>
+    <div class="grid_4 val ">
+        <input type="text" data-bind="value:form.CorpCode" class="z-txt" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl">状态</div>
+    <div class="grid_4 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('IsEnable'),comboboxValue:form.Enable" class="easyui-combobox z-txt" data-options="editable:false" />
+    </div>
+    <div class="grid_2 lbl">操作人</div>
+    <div class="grid_4 val ">
+        <input type="text" data-bind="value:form.UpdatePerson,readOnly:true" class="z-txt readonly" />
+    </div>
+    <div class="clear"></div>
+</div>

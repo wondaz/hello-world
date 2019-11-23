@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "备件采购订单";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Scripts/core/xlsx.full.min.js"></script>
+    <script src="~/Areas/Biz4S/JS/parts/BuyOrderEdit.js"></script>
+    <script type="text/javascript">
+        using(['numberbox', 'dialog','validatebox','combobox']);       
+        var viewModel = function () {
+            var self = this;
+            vms.edit.apply(self, arguments);
+            this.grid.OnAfterCreateEditor = function(editors){  
+                com.bindCalcTotalMoney(self, "Quantity", "Price", "Amount", "TotalAmount")(editors);
+            };
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+
+<div id="master" class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_1 lbl">销售单号：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.TradeOrderCode" />
+    </div>
+    <div class="grid_1 lbl">采购类型：</div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('PartsBuyType'),comboboxValue:form.TradeType" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_1 lbl">采购员：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.OrderMan" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">采购日期：</div>
+    <div class="grid_2 val">
+        @*<input type="text" data-bind="dateboxValue:form.PlanTime" class="z-txt easyui-datebox" data-options="required:true" />*@
+        <input type="text" data-bind="dateboxValue:form.PlanTime" class="z-txt easyui-datebox" />
+    </div>
+    <div class="grid_1 lbl ">备注：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.Remark" class="easyui-validatebox z-txt" />
+    </div>
+    <div class="grid_1 lbl ">总金额：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.TotalAmount" />
+    </div>
+    <div class="grid_1 lbl ">状态：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.BillStateName" />
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除备件</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addPartsClick">添加备件</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+</div>
+<table id="list" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th field="SerialID" hidden></th>
+            <th field="SparePartCode" sortable="true" align="center" width="150">备件编码</th>
+            <th field="SparePartName" sortable="true" align="center" width="180">备件名称</th>
+            <th field="Spec" sortable="true" align="center" width="180">规格型号</th>
+            <th field="Unit" sortable="true" align="center" width="70">计量单位</th>
+            <th field="Price" sortable="true" align="right" width="100" editor="{type: 'numberbox',options:{min: 0, precision: 2}}" formatter="com.formatMoney">单价</th>
+            <th field="Quantity" sortable="true" align="right" width="100" editor="{type: 'numberbox',options:{min: 1, max: 99999}}">数量</th>
+            <th field="Amount" sortable="true" align="right" width="100" editor="{type: 'numberbox',options:{min: 0, precision: 2}}" formatter="com.formatMoney">金额</th>
+        </tr>
+    </thead>
+</table>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_3 val">
+        制单人：<span data-bind="text:form.InputName" />
+    </div>
+    <div class="grid_3 val">
+        制单时间：<span data-bind="text:form.InputTime" />
+    </div>
+    <div class="grid_3 val">
+        审核人：<span data-bind="text:form.AuditName" />
+    </div>
+    <div class="grid_3 val">
+        审核时间：<span data-bind="text:form.AuditTime" />
+    </div>
+</div>
+@*新增窗口*@
+<script type="text/html" id="addParts-template">
+    <div class="container_12" style="height: 290px; overflow: auto;">
+        <div class="clear" style="height: 5px;"></div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">拼音码：</div>
+        <div class="grid_9 val">
+            <input id="txtSpellCode" type="text" data-bind="value:wform.SpellAb" class="z-txt easyui-autocomplete" data-options="url:vdata.urls.partsSpell,required:true" style="width: 248px" autocomplete="off" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件编码：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.SparePartCode"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件名称：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.SparePartName"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件规格：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.Spec"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">计量单位：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.Unit"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件单价：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.Price"></span>
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_3 lbl">备件数量：</div>
+        <div class="grid_9 val">
+            <input type="text" data-bind="numberboxValue:wform.Quantity" class="easyui-numberbox" data-options="min: 0,max:999999,required:true" style="width: 248px" />
+        </div>
+
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备注：</div>
+        <div class="grid_9 val">
+            <textarea data-bind="value:wform.Remark" style="width: 241px; height: 40px" data-options="validType:'length[0,200]'"></textarea>
+        </div>
+        <div class="clear"></div>
+        <div style="text-align: center;">
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">添加</a>
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">关闭</a>
+        </div>
+        @*<div class="clear" style="margin-top: 20px"></div>
+            <div class="grid_3 lbl"></div>
+            <a href="/excel/月度采购订单导入模板.xlsx">月度采购订单导入模板</a>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">批量导入：</div>
+            <input type="file" accept=".xlsx" id="xlsxFile" style="width: 148px" />
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:importClick" href="javascript:void(0)">导入</a>*@
+    </div>
+</script>

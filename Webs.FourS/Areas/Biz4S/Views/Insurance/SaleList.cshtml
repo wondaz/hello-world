@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "保险销售单管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    @*<script src="~/Scripts/core/xlsx.full.min.js"></script>*@
+    <script src="~/Areas/Biz4S/JS/Insurance/InsuranSaleList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_3 val">
+        单据编号：<input class="z-txt easyui-validatebox" data-bind="value:form.InsSaleCode" style="width:160px" />
+    </div>
+    <div class="grid_3 val">
+        客户名称：<input class="z-txt easyui-validatebox" data-bind="value:form.CustomerName" style="width:160px" />
+    </div>
+    <div class="grid_3 val">
+        车&nbsp;牌&nbsp;号：<input class="z-txt easyui-validatebox" data-bind="value:form.SignCode" style="width:160px" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_3 val">
+        单据状态：<input data-bind="datasource:com.bindCombobox('AuditStatus'),comboboxValue:form.BillState" class="easyui-combobox" style="width:170px" data-options="editable:false" />
+    </div>
+    <div class="grid_3 val">
+        代办时间：<input type="text" data-bind="value:form.TranDate" class="z-txt easyui-daterange" style="width:160px" />
+    </div>
+    <div class="grid_3 val">
+        保&nbsp;单&nbsp;号：<input class="z-txt easyui-validatebox" data-bind="value:form.InsOrderCode" style="width:160px" />
+    </div>
+    <div class="grid_3 val">
+         <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+         <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+        <div class="clear"></div>
+    </div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+</div>
+<table id="gridlist" data-bind="datagrid:grid">
+        <thead>
+            <tr>
+                <th data-options="field:'BillState',align:'center',sortable:false, width:80" hidden></th>
+                <th data-options="field:'BillStateName',align:'center',sortable:false, width:80">单据状态</th>
+                <th data-options="field:'InsSaleCode',align:'center',sortable:false, width:130">单据编号</th>
+                <th data-options="field:'InsOrderCode',align:'center',sortable:false, width:80">保单号</th>
+                <th data-options="field:'SignCode',align:'center',sortable:true, width:150">车牌号</th>
+                <th data-options="field:'CustomerName',align:'center',sortable:true, width:150">客户名称</th>
+                <th data-options="field:'TranMan',align:'center',sortable:true, width:100">代办人员</th>
+                <th data-options="field:'TranDate',align:'center',sortable:true, width:130" formatter="com.formatTime">代办日期</th>
+                <th data-options="field:'InputName',sortable:true,align:'right',width:100">制单人</th>
+                <th data-options="field:'InputTime',sortable:true,align:'center',width:130" formatter="com.formatTime">制单日期</th>
+                <th data-options="field:'AuditName',sortable:true,align:'center',width:100">审核人</th>
+                <th data-options="field:'AuditTime',align:'center',sortable:true, width:130" formatter="com.formatTime">审核日期</th>
+                <th data-options="field:'InsSaleID'" hidden></th>
+            </tr>
+        </thead>
+</table>

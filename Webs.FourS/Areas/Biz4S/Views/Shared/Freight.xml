@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="FreightList" defaultOrderBy='a.F_Status'>
+    <module>DMS_4S</module>
+    <select>
+      F_PKId,
+      [F_CostCode],
+      [F_CostTime],
+      dbo.f_Getcodename('运费索赔单状态',a.F_Status) StatusName,
+      [F_Status],
+      [F_InputTime],
+      [F_InputName],
+      [F_AuditRemark],
+      [F_AuditTime],
+      [F_AuditName],
+      [F_SumMoney],
+      [F_Remark]
+    </select>
+    <from>
+      [dbo].[F_C_Cost] A
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true'>
+      <field name='A.B_CorpID' cp='equal'></field>
+      <field name='A.F_CostCode' cp='like'></field>
+      <field name='A.F_Status' cp='equal'></field>
+      <field name='A.F_InputTime' cp='daterange'></field>
+      <field name='A.F_IsDelete' cp='equal' value='0'></field>
+    </where>
+  </settings>
+</Area>
+

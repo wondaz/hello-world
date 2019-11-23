@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="carSaleList" defaultOrderBy='a.SaleOrderID DESC'>
+    <module>DMS_4S</module>
+    <select>
+      a.SaleOrderID, a.SaleOrderCode, a.SaleDate, U.UserName SaleMan,BillState,
+      case a.BillState when 0 then '未审' when 1 then '已审' else '已出库' end BillStateName,
+      a.VIN, b.CustomerName, b.MobileTel, a.FeeTotal,a.InputTime, a.InputName, a.AuditName,
+      a.AuditTime, a.IsPay, a.IsOut
+    </select>
+    <from>
+      dbo.A_SaleOrders AS a LEFT JOIN
+      dbo.B_Customer AS b ON a.CustomerID = b.CustomerID
+      LEFT JOIN dbo.B_AutoArchives c on a.VIN=c.VIN
+      LEFT JOIN sys_user U ON A.SaleMan = U.UserCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.VIN'  cp='like'></field>
+      <field name='A.CorpID'  cp='equal'></field>
+      <field name='B.MobileTel'  cp='startwith'></field>
+      <field name='B.CustomerName'  cp='like'></field>
+      <field name='A.Saleman'  cp='equal'></field>
+      <field name='A.BillState'  cp='equal'></field>
+      <field name='A.SaleDate'  cp='daterange'></field>
+    </where>
+  </settings>
+  <settings name="carIntoStoreEdit" defaultOrderBy='ID'>
+    <module>DMS_4S</module>
+    <select>
+      ID,VIN,BrandName,SeriesName,ModelName,OutsideColor,InsideColor,EngineCode,MeasureCode,
+      ProduceArea,ProduceDate,ProduceCorp,CostPrice,CarType,AssembleMemo,SignCode,Remark,
+      InputDate,InputName,UpdateDate,UpdateName,CarState,IsInStock,State,TransmissionState
+    </select>
+    <from>
+      B_AutoArchives
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='CorpID'  cp='equal'></field>
+      <field name='CarState'  cp='equal' value='在途'></field>
+      <field name='state'  cp='equal' value='0'></field>
+      <field name='CarType'  cp='notequal' value='保有车'></field>
+      <field name='IsInStock'  cp='equal' value='0'></field>
+      <field name='VIN'  cp='like'></field>
+    </where>
+  </settings>
+  <settings name="carStockList" defaultOrderBy='a.SerialID DESC'>
+    <module>DMS_4S</module>
+    <select>
+      a.SerialID,a.StockID,a.LocationID,a.VIN,a.Price,a.InStockDate,a.OutStockDate,a.State,     
+      b.OutsideColor,b.InsideColor,b.CostPrice,b.CarType,b.CarState,B.BrandName,
+      B.SeriesName,B.ModelName,C.StockName
+    </select>
+    <from>
+      A_AutoStorage a INNER JOIN B_AutoArchives b ON A.VIN=B.VIN
+      LEFT JOIN base_Stock C ON A.StockID=C.StockID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='B.SeriesName'  cp='like'></field>
+      <field name='B.ModelName'  cp='like'></field>
+      <field name='A.VIN'  cp='startwith'></field>      
+      <field name='B.CorpID'  cp='equal'></field>
+      <field name='A.state'  cp='equal' value='0'></field>
+      <field name='B.CarState'  cp='dqual' value='在库'></field>
+    </where>
+  </settings>
+  
+ 
+</Area>
+

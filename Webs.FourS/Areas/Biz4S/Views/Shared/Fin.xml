@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="CarPayList" defaultOrderBy='a.SaleDate'>
+    <module>DMS_4S</module>
+    <select>
+      a.[SaleOrderCode],a.[SaleDate],a.[CustomerID],u.userName SaleMan,
+      a.[VIN],c.BrandName,c.SeriesName,c.ModelName,a.IsInstalment,a.BankID,
+      a.CustomerFistPay,a.BankPay,c.[OutsideColor],a.[FeeTotal],a.[Remark],a.[IsOld],
+      a.[IsPay],a.[IsOut],a.Subscription,
+      ISNULL(f.SumPaid,0) SumPaid,(FeeTotal-ISNULL(f.SumPaid,0)) as Debt,
+      g.TypeName,b.CustomerCode,b.CustomerName,b.MobileTel
+    </select>
+    <from>
+      A_SaleOrders as a
+      inner join B_AutoArchives c on a.vin = c.vin
+      left join B_Customer as b on a.CustomerID=b.CustomerID
+      left join B_CustomerType as g on b.TypeID=g.TypeID
+      left join sys_user u on a.saleMan = u.userCode
+      left join (
+      SELECT ISNULL(SUM(PayMoney),0) AS SumPaid, VIN,CorpID
+      FROM A_PaymentDetail  WHERE PaymentType='整车付款'
+      GROUP BY VIN,CorpID) f on a.VIN = f.VIN AND a.CorpID=f.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.CorpID'  cp='equal'></field>
+      <field name='a.BillState'  cp='equal' value='1'></field>
+      <field name='a.IsPay'  cp='equal'></field>
+      <field name='a.SaleMan' cp='equal'></field>
+      <field name ='a.vin' cp ='like'></field>
+      <field name='a.SaleDate'   cp='daterange'></field>
+    </where>
+  </settings>
+  <settings name="carPaidItems" defaultOrderBy='c.PaymentTime'>
+    <module>DMS_4S</module>
+    <select>
+      c.PaymentTime,b.CustomerName, c.OriBillCode,c.PaymentCode,c.CheckCode,c.InvoiceCode,c.Remark,c.Cashier,
+      dbo.f_Getcodename('付款方式',c.PaymentMode) PaymentModeName,c.PayMoney,c.InputTime,c.InputName,c.Remark
+    </select>
+    <from>
+      A_SaleOrders as a
+      inner join A_PaymentDetail c on c.VIN = a.VIN
+      left join B_Customer as b on a.CustomerID=b.CustomerID  and a.CorpID=c.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.CorpID'  cp='equal'></field>
+      <field name='a.VIN'  cp='equal'></field>
+    </where>
+  </settings>
+
+  <settings name="partsPayList" defaultOrderBy='a.SellTime'>
+    <module>DMS_4S</module>
+    <select>
+      a.SellOrderCode,
+      a.SellTime,
+      u.userName Seller,
+      a.TotalAmount,
+      a.Remark,
+      ISNULL(f.SumPaid, 0) SumPaid,
+      (a.TotalAmount - ISNULL(f.SumPaid, 0)) AS Debt,
+      g.TypeName,
+      b.CustomerID,
+      b.CustomerCode,
+      b.CustomerName,
+      b.MobileTel
+    </select>
+    <from>
+      P_SellOrderHead AS a
+      LEFT JOIN B_Customer AS b ON a.CustomerID = b.CustomerID
+      LEFT JOIN B_CustomerType AS g ON b.TypeID = g.TypeID
+      LEFT JOIN sys_user u ON a.Seller = u.UserCode
+      LEFT JOIN
+      (
+      SELECT ISNULL(SUM(PayMoney), 0) AS SumPaid,OriBillCode,CorpID
+      FROM A_PaymentDetail
+      WHERE PaymentType = '备件付款'
+      GROUP BY OriBillCode,CorpID
+      ) f ON a.SellOrderCode = f.OriBillCode AND a.CorpID=f.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.CorpID'        cp='equal'></field>
+      <field name='a.BillState'     cp='equal' value='1'></field>
+      <field name='a.IsPay'         cp='equal'></field>
+      <field name='a.Seller'        cp='equal'></field>
+      <field name='a.SellTime'      cp='daterange'></field>
+      <field name='a.SellOrderCode' cp='like'></field>
+    </where>
+  </settings>
+  <settings name="partsPaidItems" defaultOrderBy='c.PaymentTime'>
+    <module>DMS_4S</module>
+    <select>
+      c.PaymentTime,b.CustomerName, c.OriBillCode,c.PaymentCode,c.CheckCode,c.InvoiceCode,c.Remark,c.Cashier,
+      dbo.f_Getcodename('付款方式',c.PaymentMode) PaymentModeName,c.PayMoney,c.InputTime,c.InputName,c.Remark
+    </select>
+    <from>
+      P_SellOrderHead as a
+      inner join A_PaymentDetail c on a.SellOrderCode = c.OriBillCode
+      left join B_Customer as b on a.CustomerID=b.CustomerID and a.CorpID=c.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.CorpID'        cp='equal'></field>
+      <field name='a.SellOrderCode' cp='equal'></field>
+    </where>
+  </settings>
+
+  <settings name="RepairPayList" defaultOrderBy='a.MeetAutoTime'>
+    <module>DMS_4S</module>
+    <select>
+      a.DispatchID,
+      a.DispatchCode,
+      a.SignCode,
+      a.VIN,
+      a.MeetAutoTime,
+      u.UserName EmpName,
+      a.EarningSum,
+      a.Remark,
+      ISNULL(f.SumPaid, 0) SumPaid,
+      (a.EarningSum - ISNULL(f.SumPaid, 0)) AS Debt,
+      g.TypeName,
+      b.CustomerID,
+      b.CustomerCode,
+      b.CustomerName,
+      b.MobileTel
+    </select>
+    <from>
+      S_Balance AS a
+      LEFT JOIN B_Customer AS b ON a.CustomerID = b.CustomerID
+      LEFT JOIN B_CustomerType AS g ON b.TypeID = g.TypeID
+      LEFT JOIN sys_user u ON a.EmpName = u.UserCode
+      LEFT JOIN
+      (
+      SELECT ISNULL(SUM(PayMoney), 0) AS SumPaid,
+      OriBillCode,CorpID
+      FROM A_PaymentDetail
+      WHERE PaymentType = '维修付款'
+      GROUP BY OriBillCode,CorpID
+      ) f ON a.DispatchCode = f.OriBillCode and a.CorpID=f.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.CorpID'    cp='equal'></field>
+      <field name='a.BillState' cp='equal' value='1'></field>
+      <field name='a.IsPay'     cp='equal'></field>
+      <field name='a.EmpName'   cp='equal'></field>
+      <field name='a.MeetAutoTime' cp='daterange'></field>
+      <field name='a.DispatchCode' cp='like'></field>
+    </where>
+  </settings>
+  <settings name="RepairPaidItems" defaultOrderBy='c.PaymentTime'>
+    <module>DMS_4S</module>
+    <select>
+      c.PaymentTime,b.CustomerName, c.OriBillCode,c.PaymentCode,c.CheckCode,c.InvoiceCode,c.Remark,c.Cashier,
+      dbo.f_Getcodename('付款方式',c.PaymentMode) PaymentModeName,c.PayMoney,c.InputTime,c.InputName,c.Remark
+    </select>
+    <from>
+      S_Balance as a
+      inner join A_PaymentDetail c on a.DispatchCode = c.OriBillCode
+      left join B_Customer as b on a.CustomerID=b.CustomerID and a.CorpID=c.CorpID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='a.CorpID'        cp='equal'></field>
+      <field name='a.DispatchCode' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

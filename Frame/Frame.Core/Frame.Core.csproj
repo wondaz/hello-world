@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{36C1BA99-16C8-4BD8-9FBA-59811CE7C1F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Frame.Core</RootNamespace>
+    <AssemblyName>Frame.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentData, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FluentData.3.0.1.0\lib\FluentData.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Webs.FourS\DLL\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Providers.Core.2.0.0\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Args\EditPageEventArgs.cs" />
+    <Compile Include="Base\LoginUser.cs" />
+    <Compile Include="Base\ServiceBaseEditPage.cs" />
+    <Compile Include="Core\LoginerBase.cs" />
+    <Compile Include="Core\StartWithConstraint.cs" />
+    <Compile Include="Core\ZMessage.cs" />
+    <Compile Include="Dict\ButtonAuth.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Enum\TabType.cs" />
+    <Compile Include="Exporter\Exporter.cs" />
+    <Compile Include="Exporter\ICompress.cs" />
+    <Compile Include="Exporter\IExport.cs" />
+    <Compile Include="Exporter\ZipCompress.cs" />
+    <Compile Include="Exporter\XlsxExport.cs" />
+    <Compile Include="Exporter\Column.cs" />
+    <Compile Include="Exporter\IDataGetter.cs" />
+    <Compile Include="Exporter\ApiData.cs" />
+    <Compile Include="Exporter\XlsExport.cs" />
+    <Compile Include="Exporter\PdfExport.cs" />
+    <Compile Include="Exporter\HtmlDocExport.cs" />
+    <Compile Include="Exporter\NoneCompress.cs" />
+    <Compile Include="Exporter\IFormatter.cs" />
+    <Compile Include="Dict\DataDict.cs" />
+    <Compile Include="Exporter\NoneFormatter.cs" />
+    <Compile Include="Generator\Entity\Table.cs" />
+    <Compile Include="Generator\Entity\TableKey.cs" />
+    <Compile Include="Generator\Entity\TableSchema.cs" />
+    <Compile Include="Generator\Util.cs" />
+    <Compile Include="Generator\GenTables.cs" />
+    <Compile Include="Generator\Providers\ISqlGen.cs" />
+    <Compile Include="Generator\Providers\OracleGen.cs" />
+    <Compile Include="Generator\Providers\SqlServerGen.cs" />
+    <Compile Include="Logs\LogReader.cs" />
+    <Compile Include="Request\RequestWrapperMethods.cs" />
+    <Compile Include="Request\RequestWrapper.cs" />
+    <Compile Include="Base\ServiceBase.cs" />
+    <Compile Include="Base\ServiceBaseDelete.cs" />
+    <Compile Include="Base\ServiceBaseEdit.cs" />
+    <Compile Include="Base\ServiceBaseInsert.cs" />
+    <Compile Include="Base\ServiceBaseLog.cs" />
+    <Compile Include="Base\ServiceBaseQuery.cs" />
+    <Compile Include="Base\ServiceBaseUpdate.cs" />
+    <Compile Include="Core\Db.cs" />
+    <Compile Include="Enum\DownloadType.cs" />
+    <Compile Include="Enum\FileSuffix.cs" />
+    <Compile Include="Enum\ErrorHandleType.cs" />
+    <Compile Include="Core\NewKey.cs" />
+    <Compile Include="Args\EditEventArgs.cs" />
+    <Compile Include="Args\InsertEventArgs.cs" />
+    <Compile Include="Args\UpdateEventArgs.cs" />
+    <Compile Include="Args\DeleteEventArgs.cs" />
+    <Compile Include="Request\RequestWrapperConvert.cs" />
+    <Compile Include="Request\RequestWrapperService.cs" />
+    <Compile Include="Logs\LogHelper.cs" />
+    <Compile Include="Param\ParamSP.cs" />
+    <Compile Include="Param\ParamSPData.cs" />
+    <Compile Include="Param\ParamWhere.cs" />
+    <Compile Include="Core\FormsAuth.cs" />
+    <Compile Include="Core\APP.cs" />
+    <Compile Include="Core\Attribute.cs" />
+    <Compile Include="Base\ServiceBaseUtils.cs" />
+    <Compile Include="Base\ModelBase.cs" />
+    <Compile Include="Enum\MsgType.cs" />
+    <Compile Include="Enum\OptType.cs" />
+    <Compile Include="Enum\ServiceType.cs" />
+    <Compile Include="Core\ZException.cs" />
+    <Compile Include="Param\ParamDelete.cs" />
+    <Compile Include="Param\ParamDeleteData.cs" />
+    <Compile Include="Param\ParamInsert.cs" />
+    <Compile Include="Param\ParamInsertData.cs" />
+    <Compile Include="Param\ParamQuery.cs" />
+    <Compile Include="Param\ParamQueryData.cs" />
+    <Compile Include="Param\ParamUpdate.cs" />
+    <Compile Include="Param\ParamUpdateData.cs" />
+    <Compile Include="Param\ParamUtils.cs" />
+    <Compile Include="Core\Compare.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Logs\Default.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Frame.Utils\Frame.Utils.csproj">
+      <Project>{b62970f8-65aa-46e0-9f11-f573c117248f}</Project>
+      <Name>Frame.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

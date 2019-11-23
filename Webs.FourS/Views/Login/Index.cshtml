@@ -1,0 +1,41 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title>汽车4S店-登录</title>
+    <link href="~/Content/css/page/login.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/jquery/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/core/knockout-3.5.0.js"></script>
+    <script src="~/Scripts/viewModel/login.js"></script>
+</head>
+@*style="background:#0058ac"*@
+<body style="background:url('/content/images/login/login_bg.jpg')" >
+    <div class="login">
+        <div class="login_title">
+            <p>汽车4S店管理系统</p>
+        </div>
+        <div class="login_main">
+            <div class="main_left"></div>
+            <div class="main_right">
+                <div class="right_title">用户登录</div>
+                <form data-bind="submit:loginClick">
+                    <div class="username">
+                        <img src="~/content/images/login/username.png" alt="">
+                        <input type="text" placeholder="请输入用户名" data-bind="value:form.usercode" />
+                    </div>
+                    <div class="password">
+                        <img src="~/content/images/login/password.png" alt="">
+                        <input type="password" placeholder="请输入密码" data-bind="value:form.password" />
+                    </div>
+                    <div class="yes_login">
+                        <input type="submit" value="登&nbsp;&nbsp;&nbsp;&nbsp;录" />
+                    </div>
+                    <div class="message" data-bind="html:message"></div>
+                </form>
+            </div>
+        </div>
+        <div class="login_footer">
+            <p class="name">版权所有: 成都国龙信息工程有限责任公司&nbsp;  联系电话：028-87644567 &nbsp;028-87642255 </p>
+        </div>
+    </div>
+</body>
+</html>

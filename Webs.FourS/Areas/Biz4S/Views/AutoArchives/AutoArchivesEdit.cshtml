@@ -1,0 +1,188 @@
+﻿@{
+    ViewBag.Title = "车辆档案浏览";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/CarArchives/AutoArchivesList.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var viewModel = function () {
+            vms.search.apply(this, arguments);
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="车辆信息">
+        <div class="grid_1 lbl">VIN码：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.VIN" class=" z-txt easyui-validatebox" readonly/>
+        </div>
+        <div class="grid_1 lbl">品牌：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.BrandName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">车系：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.SeriesName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">车型：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.ModelName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">外观色：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.OutsideColor" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">内饰色：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.InsideColor" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">发动机号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.EngineCode" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">合格证号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.MeasureCode" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">产地：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.ProduceArea" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">出厂日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.ProduceDate" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">生产厂商：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.ProduceCorp" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">成本价：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.CostPrice" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">车辆类型：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.CarType" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">加装说明：</div>
+        <div class="grid_5 val">
+            <input type="text" data-bind="value:form.AssembleMemo" class=" z-txt easyui-validatebox" readonly />
+        </div>
+    </div>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="销售信息">
+        <div class="grid_1 lbl">客户名称：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.CustomerName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">移动电话：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.MobileTel" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">销售公司：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.CorpID" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">销售顾问：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.SaleManName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">销售日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.SaleDate" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">车牌号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.SignCode" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">上牌日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.SignDate" class="z-txt easyui-datebox" data-options="editable:false" />
+        </div>
+        <div class="grid_1 lbl">年审月份：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.YearAudit" class="z-txt easyui-datebox" data-options="editable:false" />
+        </div>
+        <div class="grid_1 lbl">使用性质：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:com.bindCombobox('UseType'),comboboxValue:form.UseType" data-options="editable:false" class=" z-txt easyui-combobox" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">首保日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.MaintainDate" class="z-txt easyui-datebox" data-options="editable:false" />
+        </div>
+    </div>
+</div>
+<div class="clear"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="保险信息">
+        <div class="grid_1 lbl">保险公司：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:ds.InsureCorpName,comboboxValue:form.InsureCorpID" class=" z-txt easyui-combobox" data-options="editable:false" readonly />
+        </div>
+        <div class="grid_1 lbl">生效日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.StartDate" class="z-txt easyui-datebox" data-options="editable:false" readonly />
+        </div>
+        <div class="grid_1 lbl">截止日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.EndDate" class="z-txt easyui-datebox" data-options="editable:false" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">保单号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.InsOrderCode" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">投保金额：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.InsuFee" class=" z-txt easyui-validatebox" readonly />
+        </div>
+    </div>
+</div>
+    <div class="clear"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+     <div class="easyui-panel" style="width: 100%; padding: 5px;" title="维修保养信息">
+            <div class="grid_3 val">
+                下次保养日期：<input type="text" data-bind="value:form.NextMaintainDate" class=" z-txt easyui-validatebox" readonly />
+            </div>
+             <div class="grid_3 val">
+                 最后保养日期：<input type="text" data-bind="value:form.MeetAutoTime" class=" z-txt easyui-validatebox" readonly />
+             </div>
+             <div class="grid_1 lbl">服务顾问：</div>
+             <div class="grid_2 val">
+                 <input type="text" data-bind="value:form.ServiceMan" class=" z-txt easyui-validatebox" readonly />
+             </div>
+            <div class="clear"></div>
+            <div class="grid_3 val">
+                下次保养里程：<input type="text" data-bind="value:form.NextMaintainDistance" class=" z-txt easyui-validatebox" readonly />
+            </div>
+             <div class="grid_3 val">
+                 最后报修人名：<input type="text" data-bind="value:form.LinkMan" class=" z-txt easyui-validatebox" readonly />
+             </div>
+             <div class="grid_1 lbl">行使里程：</div>
+             <div class="grid_2 val">
+                 <input type="text" data-bind="value:form.RunDistance" class=" z-txt easyui-validatebox" readonly />
+             </div>
+            <div class="clear"></div>
+            <div class="grid_3 val">
+                最后报修电话：<input type="text" data-bind="value:form.LinkTel" class=" z-txt easyui-validatebox" readonly />
+            </div>
+        </div>
+    </div>

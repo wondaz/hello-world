@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "旧件返厂单管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/biz4s/JS/ReturnOldParts/ReturnOldPartsList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_1 lbl">
+        返厂单号：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.F_OldPartsCode" />
+    </div>
+    <div class="grid_1 lbl">
+        返厂日期：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form.F_OldReturnTime" class="z-txt easyui-daterange" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_3 lbl">
+        承运商名称：<input class="easyui-validatebox" data-bind="value:form.F_CarryName" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">
+        物流单号：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.F_DeliveryNumber" />
+    </div>
+    <div class="grid_1 lbl">
+        单据状态：
+    </div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('AuditStatus'),comboboxValue:form.F_Status" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_3 val" style="text-align:right">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear">&nbsp;</div>
+</div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+</div>
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'ID',align:'center',sortable:false, width:80" hidden></th>
+            <th data-options="field:'AuditName',align:'center',sortable:false, width:100">审核状态</th>
+            @*<th data-options="field:'F_StatusName',align:'center',sortable:false, width:100">收货状态</th>
+            <th data-options="field:'F_ClaimOrNotName',align:'center',sortable:true, width:150">检验状态</th>*@
+            <th data-options="field:'Old_F_OldPartsCode',align:'center',sortable:true, width:150">旧件返厂单号</th>
+            <th data-options="field:'Old_F_DocType',align:'center',sortable:true, width:100">旧件返厂类型</th>
+            <th data-options="field:'Old_F_OldReturnTime',align:'center',sortable:true, width:100">返厂日期</th>
+            @*<th data-options="field:'F_ClaimTime',sortable:true,align:'center',width:130" formatter="com.formatTime">索赔日期</th>*@
+            <th data-options="field:'UpdateDate',sortable:true,align:'right',width:100">输入时间</th>
+            <th data-options="field:'Old_F_CarryName',sortable:true,align:'center',width:100">承运商名称</th>
+            <th data-options="field:'Old_F_DeliveryNumber',sortable:true,align:'center',width:100">物流单号</th>
+            <th data-options="field:'Old_F_Money',sortable:true,align:'center',width:100">旧件运费</th>
+            <th data-options="field:'SunOldPartsNubrm',sortable:true,align:'center',width:100">旧件总数量</th>
+            <th data-options="field:'SunClaimPrice',sortable:true,align:'center',width:100">旧件索赔总金额</th>
+        </tr>
+    </thead>
+</table>
+

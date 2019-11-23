@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="ClamiSaleList" defaultOrderBy='C.F_ClaimTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      B.SPDCode as F_ClaimCode,A.F_OldPartsCode,C.F_ClaimTime,
+      A.F_OldReturnTime,B.P_PartCode,B.P_PartName,B.F_ClaimPrice,B.F_Number,
+      B.F_ClaimOrNot,dbo.f_Getcodename('检验状态',B.F_ClaimOrNot) as CheckedName
+    </select>
+    <from>
+      [dbo].[F_C_OldPartsReturn] as A
+      inner join [dbo].[F_C_OldPartsReturnList] as B on A.F_PKId = B.F_Mid
+      inner join F_C_Claim as C on B.SPDCode=C.F_ClaimCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='B.SPDCode'  cp='like'></field>
+      <field name='B.P_PartName'  cp='like'></field>
+      <field name='A.B_CorpID' cp='equal'></field>
+      <field name='C.F_ClaimTime'  cp='daterange'></field>
+    </where>
+  </settings>
+  <settings name="GridSaleList" defaultOrderBy='B.F_ClaimTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.F_PKId,A.F_ClaimCode,A.F_OldPartsCode,B.F_ClaimTime,A.F_OldReturnTime
+      ,A.P_PartCode,A.P_PartName,A.F_ClaimPrice,A.F_Number,'' AS F_ClaimOrNot,A.F_CheckedName
+      AS CheckedName
+    </select>
+    <from>
+      F_C_OldPartsAppealList A
+      inner join F_C_Claim as B on A.F_ClaimCode=B.F_ClaimCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.F_Mid'  cp='equal'></field>
+    </where>
+  </settings>
+  <settings name="GridOldReturnAppealList" defaultOrderBy='F_InputTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      F_PKId,dbo.f_Getcodename('运费索赔单状态',F_Status) as F_Status,F_OldPartsAppealCode,F_OldPartsAppealTime,
+      (select COUNT(*) FROM F_C_OldPartsAppealList where F_Mid=A.F_PKId) as
+      F_Number,(select SUM(F_ClaimPrice) FROM F_C_OldPartsAppealList where F_Mid=A.F_PKId) AS ClaimPrice,
+      F_InputTime,F_InputName
+    </select>
+    <from>
+      F_C_OldPartsAppeal A
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.F_OldPartsAppealCode'  cp='like'></field>
+      <field name='A.F_Status'  cp='equal'></field>
+      <field name='A.B_CorpID' cp='equal'></field>
+      <field name='A.F_OldPartsAppealTime'  cp='daterange'></field>
+    </where>
+  </settings>
+</Area>

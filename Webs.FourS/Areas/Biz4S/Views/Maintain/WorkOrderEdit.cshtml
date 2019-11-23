@@ -1,0 +1,337 @@
+﻿@{
+    ViewBag.Title = "车辆维修派工单";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <link href="/Scripts/jquery-easyui-1.5.2/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/Scripts/jquery-easyui-1.5.2/jquery.easyui.min.js"></script>
+    <script src="~/Areas/Biz4S/JS/Maintain/WorkOrderEdit.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+        var formatAccount = utils.fnValueToText(vdata.accountList);
+        var formatBigClass = utils.fnValueToText(vdata.bigClassList);
+        var formatSmallClass = utils.fnValueToText(vdata.smallClassList);
+        var formatWorkTeam = utils.fnValueToText(vdata.workTeamList);
+        var formatWorkShop = utils.fnValueToText(vdata.workShopList);
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+</div>
+<div id="master" class="container_16" data-bind="inputwidth:0.9">
+    <div class="grid_2 lbl">工单编号：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.DispatchCode"></span>
+    </div>
+    <div class="grid_2 lbl"> 车牌号：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.SignCode" class="z-txt easyui-autocomplete" data-options="required:true,url:vdata.urls.signCode" autocomplete="off" />
+    </div>
+    <div class="grid_2 lbl"> 客户电话：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.MobileTel" class="easyui-validatebox z-txt" data-options="required:true" />
+    </div>
+        <div class="grid_2 lbl">接车时间：</div>
+    <div class="grid_2 val">
+        <input class="easyui-datetimespinner" data-bind="datetimespinnerValue:form.MeetAutoTime" data-options="required:true" style="width:125px" />
+    </div>
+    <div class="clear"></div>
+
+    <div class="grid_2 lbl ">接车卡号：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.MeetAutoCode" class="easyui-validatebox z-txt" />
+    </div>
+    <div class="grid_2 lbl"> 行驶里程(KM)：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="numberboxValue:form.RunDistance" class="easyui-numberbox" data-options="min: 0,max:999999,required:true" style="width:120px" />
+    </div>
+    <div class="grid_2 lbl"> 客户姓名：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.CustomerName" class="easyui-validatebox z-txt" data-options="required:true" />
+    </div>
+    <div class="grid_2 lbl">预计交车时间：</div>
+    <div class="grid_2 val">
+        <input class="easyui-datetimespinner" data-bind="datetimespinnerValue:form.EstimateTime" data-options="required:true" style="width:125px" />
+    </div>
+    
+    <div class="clear"></div>
+
+    <div class="grid_2 lbl "> 服务顾问：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.EmpNames,comboboxValue:form.EmpName" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+
+    <div class="grid_2 lbl"> 下次保养里程(KM)：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="numberboxValue:form.NextMaintainDistance" class="easyui-numberbox" data-options="min: 0,max:999999,required:true" style="width:120px" />
+    </div>
+    <div class="grid_2 lbl"> 下次保养日期：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="dateboxValue:form.NextMaintainDate" class="easyui-datebox z-txt" />
+    </div>
+
+    <div class="grid_2 lbl ">实际交车时间：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.HandTime"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 购车日期：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.SaleDate"></span>
+    </div>
+    <div class="grid_2 lbl"> 车系：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.BrandName"></span>
+        <span data-bind="text:form.SeriesName"></span>
+    </div>
+    <div class="grid_2 lbl"> 车型：</div>
+    <div class="grid_6 val ">
+        <span data-bind="text:form.ModelName"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 报修人：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.RepairName" class="easyui-validatebox z-txt" />
+    </div>
+    <div class="grid_2 lbl"> 报修人电话：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.RepairTel" class="easyui-validatebox z-txt" />
+    </div>
+
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 报修人描述：</div>
+    <div class="grid_6 val ">
+        <textarea data-bind="value:form.RepairDescribe" style="width: 96%" data-options="validType:'length[0,200]'"></textarea>
+    </div>
+    <div class="grid_2 lbl"> 备注：</div>
+    <div class="grid_6 val">
+        <textarea data-bind="value:form.Demo" style="width: 96%" data-options="validType:'length[0,200]'"></textarea>
+    </div>
+
+    <div class="clear"></div>
+</div>
+
+<div class="easyui-tabs">
+    <div title="维修工时">
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addRepairItemClick">新增</a>
+            <a href="#" plain="true" gridindex="1" class="easyui-linkbutton" icon="icon-cut" title="删除" data-bind="click:deleteClick">删除</a>
+        </div>
+        <table data-bind="datagrid:grid1">
+            <thead>
+                <tr>
+                    <th data-options="field:'ManhourCode',align:'center',sortable:false, width:70">工时编码</th>
+                    <th data-options="field:'ManhourDescribe',align:'center',sortable:true, width:180">工时描述</th>
+                    <th data-options="field:'BillTypeID',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.bigClassList}}" formatter="formatBigClass">维修大类</th>
+                    <th data-options="field:'ItemTypeID',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.smallClassList}}" formatter="formatSmallClass">维修小类</th>
+                    <th data-options="field:'AccountType',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.accountList}}" formatter="formatAccount">帐类</th>
+                    @*<th data-options="field:'DispatchManhour',sortable:true,align:'right',width:70">派工费</th>*@
+                    <th data-options="field:'ManHourFee',align:'right',sortable:true, width:70">工时费</th>
+                    <th data-options="field:'ClassID',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.workTeamList}}" formatter="formatWorkTeam">维修班组</th>
+                    <th data-options="field:'WorkShopID',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.workShopList}}" formatter="formatWorkShop">维修工位</th>
+                    <th data-options="field:'Remark',align:'center',sortable:true, width:120" editor="textarea">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="维修备件">
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addPartsClick">新增</a>
+            <a href="#" plain="true" gridindex="2" class="easyui-linkbutton" icon="icon-cut" title="删除" data-bind="click:deleteClick">删除</a>
+        </div>
+        <table data-bind="datagrid:grid2,toolbar:toolbar">
+            <thead>
+                <tr>
+                    <th data-options="field:'SparePartCode',align:'center',sortable:false, width:120">备件编码</th>
+                    <th data-options="field:'SparePartName',align:'center',sortable:true, width:180">备件名称</th>
+                    <th data-options="field:'Unit',align:'center',sortable:true, width:120">规格型号</th>
+                    <th data-options="field:'Unit',align:'center',sortable:true, width:60">单位</th>
+                    <th data-options="field:'Quantity',align:'right',sortable:false, width:100" editor="{type:'numberbox',options:{required:true,min:0}}">数量</th>
+                    <th data-options="field:'Price',sortable:true,align:'right',width:60">单价</th>
+                    <th data-options="field:'PartFee',align:'right',sortable:true, width:80">备件费用</th>
+                    <th data-options="field:'AccountType',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.accountList}}" formatter="formatAccount">帐类</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="附加项目">
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:AppendItemClick">新增</a>
+            <a href="#" plain="true" gridindex="3" class="easyui-linkbutton" icon="icon-cut" title="删除" data-bind="click:deleteClick">删除</a>
+        </div>
+        <table data-bind="datagrid:grid3,toolbar:toolbar">
+            <thead>
+                <tr>
+                    <th data-options="field:'AppendName',align:'center',sortable:false, width:180" editor="{type:'textbox',options:{required:true}}">附加项目</th>
+                    <th data-options="field:'AccountType',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.accountList}}" formatter="formatAccount">帐类</th>
+                    <th data-options="field:'AppendFee',align:'right',sortable:false, width:120" editor="{type:'numberbox',options:{required:true,min:0}}">项目费用</th>
+                    <th data-options="field:'Remark',align:'center',sortable:false, width:180" editor="{type:'textarea'}">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="总检信息">
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addCheckClick">新增</a>
+            <a href="#" plain="true" gridindex="4" class="easyui-linkbutton" icon="icon-cut" title="删除" data-bind="click:deleteClick">删除</a>
+        </div>
+        <table data-bind="datagrid:grid4,toolbar:toolbar">
+            <thead>
+                <tr>
+                    <th data-options="field:'FinishTime',align:'center',sortable:false, width:150" editor="{type:'datetimebox',options:{required:true,editable:false}}">竣工时间</th>
+                    <th data-options="field:'TestDriveName',align:'center',sortable:false, width:120" editor="{type:'textbox',options:{required:true}}">试车人</th>
+                    <th data-options="field:'CensorName',align:'center',sortable:false, width:100" editor="{type:'textbox',options:{required:true}}">总检人</th>
+                    <th data-options="field:'JerqueTime',align:'center',sortable:false, width:150" editor="{type:'datetimebox',options:{required:true,editable:false}}">检查时间</th>
+                    <th data-options="field:'JerqueVerdict',align:'center',sortable:false, width:100" editor="{type:'textbox',options:{required:true}}">总检结论</th>
+                    <th data-options="field:'Remark',sortable:false,align:'right',width:180" editor="{type:'textarea'}">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@*制单时间*@
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_3 val">
+        工时费：<span data-bind="text:form.ManHourFee"></span>
+    </div>
+    <div class="grid_3 val">
+        备件费：<span data-bind="text:form.SparepartFee"></span>
+    </div>
+    <div class="grid_3 val">
+        附加费：<span data-bind="text:form.AddonsFee"></span>
+    </div>
+    <div class="grid_3 val">
+        总费用：<span data-bind="text:form.Amount"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_3 val">
+        制单人：<span data-bind="text:form.InputName"></span>
+    </div>
+    <div class="grid_3 val">
+        制单时间：<span data-bind="text:form.InputTime"></span>
+    </div>
+    <div class="grid_3 val">
+        审核人：<span data-bind="text:form.AuditName"></span>
+    </div>
+    <div class="grid_3 val">
+        审核时间：<span data-bind="text:form.AuditTime"></span>
+    </div>
+</div>
+@*新增维修项目窗口*@
+<script type="text/html" id="addRepairItem-template">
+    <div id="divItem" class="container_12" style="height: 370px; overflow: auto;">
+        <div class="clear" style="height: 5px;"></div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">工时编码/描述：</div>
+        <div class="grid_9 val">
+            <input id="txtManhourCode" type="text" data-bind="value:hform.ManhourCode" class="z-txt easyui-autocomplete" data-options="url:vdata.urls.Manhour,required:true" style="width: 216px" autocomplete="off" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">工时描述：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:hform.ManhourDescribe"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">派工费：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:hform.DispatchManhour"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">工时费用：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:hform.ManHourFee"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">维修大类：</div>
+        <div class="grid_9 val">
+            <input data-bind="datasource:vdata.bigClassList,comboboxValue:hform.BillTypeID" class="z-txt easyui-combobox" data-options="required:true,editable:false" style="width: 220px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">维修小类：</div>
+        <div class="grid_9 val">
+            <input data-bind="datasource:vdata.smallClassList,comboboxValue:hform.ItemTypeID" class="z-txt easyui-combobox" data-options="required:true,editable:false" style="width: 220px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">帐类：</div>
+        <div class="grid_9 val">
+            <input data-bind="datasource:vdata.accountList,comboboxValue:hform.AccountType" class="z-txt easyui-combobox" data-options="required:true,editable:false" style="width: 220px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">维修班组：</div>
+        <div class="grid_9 val">
+            <input data-bind="datasource:vdata.workTeamList,comboboxValue:hform.ClassID" class="z-txt easyui-combobox" data-options="required:true,editable:false" style="width: 220px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">维修工位：</div>
+        <div class="grid_9 val">
+            <input data-bind="datasource:vdata.workShopList,comboboxValue:hform.WorkShopID" class="z-txt easyui-combobox" data-options="required:true,editable:false" style="width: 220px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备注：</div>
+        <div class="grid_9 val">
+            <textarea data-bind="value:hform.Remark" style="width: 216px; height: 40px" data-options="validType:'length[0,200]'"></textarea>
+        </div>
+        <div class="clear"></div>
+        <div style="text-align: center;">
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">添加</a>
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">关闭</a>
+        </div>
+
+    </div>
+</script>
+@*新增备件窗口*@
+<script type="text/html" id="addParts-template">
+    <div id="divParts" class="container_12" style="height: 280px; overflow: auto;">
+        <div class="clear" style="height: 5px;"></div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">拼音码：</div>
+        <div class="grid_9 val">
+            <input id="txtSpellCode" type="text" data-bind="value:wform.SpellAb" class="z-txt easyui-autocomplete" data-options="url:vdata.urls.partsSpell,required:true" style="width: 220px" autocomplete="off" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件编码：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.SparePartCode"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件名称：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.SparePartName"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件规格：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.Spec"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">计量单位：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.Unit"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">备件单价：</div>
+        <div class="grid_9 val">
+            <span data-bind="text:wform.Price"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">使用数量：</div>
+        <div class="grid_9 val">
+            <input type="text" data-bind="numberboxValue:wform.Quantity" class="easyui-numberbox" data-options="min: 0,max:999999,required:true" style="width: 220px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_3 lbl">帐类：</div>
+        <div class="grid_9 val">
+            <input data-bind="datasource:com.bindCombobox('Account'),comboboxValue:wform.AccountType" class="z-txt easyui-combobox" data-options="required:true,editable:false" style="width: 220px" />
+        </div>
+        <div class="clear" style="margin: 10px"></div>
+        <div style="text-align: center;">
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">添加</a>
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">关闭</a>
+        </div>
+
+    </div>
+</script>

@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "运费索赔管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Freight/FreightList.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+        function cellStyler(value,row,index){
+            if(value == '审核不通过'){
+                return 'color:red;font-weight:bold;';
+            }
+            return '';
+        }
+    </script>
+}
+
+<div id="condition" class="container_16" style="position:relative;">
+    <div class="grid_4 val">
+        运费索赔号：
+        <input class="z-txt easyui-validatebox" data-bind="value:form.F_CostCode">
+    </div>
+    <div class="grid_4 val">
+        单据状态：
+        <input data-bind="datasource:com.bindCombobox('F_Status'),comboboxValue:form.F_Status" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_4 val">
+        索赔日期：
+        <input type="text" data-bind="value:form.F_InputTime" class="z-txt easyui-daterange" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="撤销提交" status="0" data-bind="click:auditClick">撤销提交</a>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'StatusName',align:'center',sortable:false, width:90,styler:cellStyler">单据状态</th>
+            <th data-options="field:'F_CostCode',align:'center',sortable:true, width:180">索赔单号</th>
+            <th data-options="field:'F_AuditName',align:'center',sortable:true, width:80">审核人</th>
+            <th data-options="field:'F_AuditRemark',align:'center',sortable:true, width:200">审核意见</th>
+            <th data-options="field:'F_InputName',align:'center',sortable:true, width:80">制单人</th> 
+            <th data-options="field:'F_InputTime',align:'center',sortable:true, width:150" formatter="com.formatTime">索赔日期</th>
+            <th data-options="field:'F_SumMoney',sortable:true,align:'right',width:100">运费总费用</th>
+        </tr>
+    </thead>
+</table>

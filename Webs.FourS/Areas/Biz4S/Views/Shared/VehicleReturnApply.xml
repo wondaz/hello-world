@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="VehicleReturnApplyList" defaultOrderBy='A.InputTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.ID,dbo.f_Getcodename('审核状态',A.F_State) F_StateName
+      ,A.Vehicle_ReturnCode,A.SaleOrderCode,A.SaleBackDate,B.CustomerName,A.Amount,
+      A.InputName,A.InputTime,A.AuditName,A.AuditTime
+    </select>
+    <from>
+      [dbo].[Vehicle_ReturnApply] A
+      LEFT JOIN B_Customer B on A.VIN=B.VIN
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='B.CustomerName' cp='like'></field>
+      <field name='A.F_State' cp='equal'></field>
+      <field name='A.SaleBackDate' cp='daterange'></field>
+      <field name='A.Vehicle_ReturnCode' cp='like'></field>
+      <field name='A.SaleOrderCode' cp='like'></field>
+      <field name='A.VIN' cp='like'></field>
+    </where>
+  </settings>
+</Area>
+

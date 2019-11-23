@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="AutoArchivesSele" defaultOrderBy='A.ID DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.ID,A.SignCode,A.CarType,A.CarState,
+      A.VIN,B.CustomerName,B.MobileTel,
+      A.BrandID,A.SeriesID,A.ModelID,
+      A.OutsideColor,A.InsideColor,
+      A.EngineCode,A.UpdateDate
+      ,E.BrandName,D.ModelName,C.SeriesName,A.UpdateDate
+    </select>
+    <from>
+      B_AutoArchives A left join [dbo].[B_Customer] B on A.VIN=B.VIN
+      left join B_AutoSeries C on A.SeriesID=C.SeriesID
+      left join B_AutoModel D on D.ModelID=A.ModelID
+      left join B_AutoBrand E on E.BrandID=A.BrandID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.SignCode' cp='like'></field>
+      <field name='A.EngineCode' cp='like'></field>
+      <field name='A.VIN' cp='equal'></field>
+      <field name='A.ModelID' cp='equal'></field>
+      <field name='A.SeriesID' cp='equal'></field>
+      <field name='A.BrandID' cp='equal'></field>
+      <field name='A.CorpID' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "工时费登记";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/ManHour/ManHourEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var viewModel = function () {
+            vms.search.apply(this, arguments);
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="工时费登记">
+        <div class="grid_1 lbl">工时编码：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.ManHourCode" />
+            <span data-bind="text:form.ManHourID" hidden />
+        </div>
+        
+        <div class="grid_1 lbl">工时类型：</div>
+        <div class="grid_2 val">
+            <input data-bind="datasource:com.bindCombobox('MaintainType'),comboboxValue:form.MaintainType" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+        </div>
+        
+        <div class="grid_1 lbl">工时名称：</div>
+        <div class="grid_3 val">
+            <input type="text" data-bind="value:form.ManHourDescribe" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">车型：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:ds.B_AutoModel,comboboxValue:form.ModelID" data-options="required:true,editable:false" class=" z-txt easyui-combobox" style="width: 150px;" />
+        </div>
+        <div class="grid_1 lbl">品牌：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:ds.B_AutoBrand,comboboxValue:form.BrandID" data-options="required:true,editable:false" class=" z-txt easyui-combobox" style="width: 150px;" />
+        </div>
+        <div class="grid_1 lbl">车系：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:ds.B_AutoSeries,comboboxValue:form.SeriesID" data-options="required:true,editable:false" class=" z-txt easyui-combobox" style="width: 150px;" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">工时费用：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.ManHour" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">派工费用：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.DispatchManHour" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">附加费用：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.AddonsManHour" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">排列顺序：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.Taxis" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">备注：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.Remark" class=" z-txt easyui-validatebox" />
+        </div>
+    </div>
+</div>

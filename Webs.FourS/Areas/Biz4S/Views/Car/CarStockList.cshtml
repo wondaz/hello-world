@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "整车库存";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Car/CarStockList.js"></script>
+    <script type="text/javascript">
+        //using(['validatebox','combobox','datebox','numberbox','calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_12 val">
+        VIN：
+        <input id="txtVin" type="text" data-bind="value:form.VIN" class="z-txt easyui-autocomplete" data-options="url:vdata.urls.vin" style="width:150px" autocomplete="off" />
+    &nbsp;&nbsp;
+        车系：
+        <input type="text" data-bind="value:form.SeriesName" class="z-txt easyui-validatebox" />
+        &nbsp;&nbsp;
+        车型：
+        <input type="text" data-bind="value:form.ModelName" class="z-txt easyui-validatebox" />
+        &nbsp;&nbsp;
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>*@  
+</div>
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'CarType',align:'center',sortable:false, width:100">车辆类型</th>
+            @*<th data-options="field:'CarState',align:'center',sortable:true, width:100">车辆状态</th>*@
+            <th data-options="field:'VIN',align:'center',sortable:true, width:150">VIN码</th>
+            @*<th data-options="field:'BrandName',align:'center',sortable:true, width:80">品牌</th>*@
+            <th data-options="field:'SeriesName',align:'center',sortable:true, width:100">车系</th>
+            <th data-options="field:'ModelName',align:'center',sortable:true, width:180">车型</th>
+            <th data-options="field:'OutsideColor',align:'center',sortable:true, width:100">外观色</th>
+            <th data-options="field:'InsideColor',align:'center',sortable:true, width:100">内饰色</th>
+            <th data-options="field:'EngineCode',align:'center',sortable:true, width:100">发动机号</th>
+            <th data-options="field:'CostPrice',align:'right',sortable:true, width:100">成本价</th>
+            <th data-options="field:'InStockDate',align:'center',sortable:true, width:100" formatter="com.formatDate">入库日期</th>
+            <th data-options="field:'StockName',align:'center',sortable:true, width:80">仓库</th>
+            <th data-options="field:'LocationID',align:'center',sortable:true, width:80">库位</th>
+        </tr>
+    </thead>
+</table>

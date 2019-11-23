@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="WorkOrderList" defaultOrderBy='A.[DispatchID] desc'>
+    <module>DMS_4S</module>
+    <select>
+      A.[DispatchID],
+      A.[BillState],
+      dbo.f_Getcodename('维修工单状态',A.[BillState]) BillStateName,
+      A.[SignCode],
+      A.[DispatchCode],
+      U.[UserName],
+      A.[InputName],
+      A.[InputTime],
+      A.[AuditName],
+      A.[AuditTime],
+      A.[MeetAutoTime],
+      A.[EstimateTime],
+      A.MeetAutoCode,
+      A.[RunDistance],
+      A.[RepairDescribe],
+      A.[VIN],
+      A.[CustomerID],
+      A.[Demo],
+      A.[RepairName],
+      A.[RepairTel],
+      A.[ManHourFee],
+      A.[SparepartFee],
+      A.[AddonsFee],
+      A.[Amount],
+      A.IsBalance,
+      A.[Remark],
+      A.NextMaintainDistance,
+      A.NextMaintainDate,
+      B.CustomerName,
+      B.MobileTel,
+      D.BrandName,
+      F.SeriesName,
+      E.ModelName,
+      A.IsPay,
+      case when A.IsPay=0 then '未付' else '已付' end IsPayName
+    </select>
+    <from>
+      S_Dispatch AS A
+      LEFT JOIN B_Customer AS B ON A.CustomerID = B.CustomerID
+      LEFT JOIN B_AutoArchives AS C ON A.VIN = C.VIN
+      LEFT JOIN B_AutoBrand AS D ON C.BrandID = D.BrandID
+      LEFT JOIN B_AutoSeries AS F ON C.SeriesID = F.SeriesID
+      LEFT JOIN B_AutoModel AS E ON C.ModelID = E.ModelID
+      LEFT JOIN sys_user AS U ON U.UserCode = A.EmpName
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true'>
+      <field name='A.EmpName'      cp='equal'></field>
+      <field name='A.DispatchCode' cp='like'></field>
+      <field name='A.SignCode'     cp='like'></field>
+      <field name='A.InputTime'    cp='daterange'></field>
+      <field name='A.BillState'    cp='equal'></field>
+      <field name='A.CorpID'       cp='equal'></field>
+      <field name='B.MobileTel'    cp='like'></field>
+    </where>
+  </settings>
+  <settings name="SettlementList" defaultOrderBy='A.[BalanceID] desc'>
+    <module>DMS_4S</module>
+    <select>
+      dbo.f_Getcodename('工单结算状态',A.[BillState]) BillStateName,
+      [BalanceID],[BalanceCode],[DispatchID],[MeetAutoCode],A.[SignCode],A.[VIN],U.UserName EmpName,[EndTime],InsureCorp,
+      [MeetAutoTime],[ManHourFee],[ManHourAgio],[AgioManHourFee],[CounterclaimSum],[SparepartFee],[SparepartAgio],
+      [AgioSparepartFee],[BosomSum],[AddonsFee],[TaxForMerSum],[Cess],[InsuranceSum],[CessSum],[AccountReceivable],
+      [EarningSum],A.[InputName],[InputTime],A.Remark,A.IsInsurance,A.IsBosom,A.IsCounterclaim,
+      [AuditName],[AuditTime],[BillState],A.CustomerID,B.CustomerName,B.MobileTel,c.BrandName,c.SeriesName,c.ModelName,
+      IsPay,case when A.IsPay=0 then '未付' else '已付' end IsPayName
+    </select>
+    <from>
+      S_Balance AS A
+      LEFT JOIN B_Customer AS B ON A.CustomerID=B.CustomerID
+      LEFT JOIN B_AutoArchives AS C ON A.VIN=C.VIN
+      LEFT JOIN sys_user U ON A.EmpName= U.UserCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true'>
+      <field name='A.BalanceCode' cp='like'></field>
+      <field name='A.SignCode'     cp='like'></field>
+      <field name='A.InputTime'    cp='daterange'></field>
+      <field name='A.BillState'    cp='equal'></field>
+      <field name='A.CorpID'       cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

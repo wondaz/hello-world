@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "旧件申诉管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/OldReturnAppeal/OldReturnAppealList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="基本信息">
+        <div class="grid_1 lbl">
+            申诉单号：
+        </div>
+        <div class="grid_2 val">
+            <input class="easyui-validatebox" data-bind="value:form.F_OldPartsAppealCode" />
+        </div>
+        <div class="grid_1 lbl">
+            申诉日期：
+        </div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.F_OldPartsAppealTime" class="easyui-daterange" style="width:160px" />
+        </div>
+        <div class="grid_1 lbl">单据状态：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:com.bindCombobox('F_Status'),comboboxValue:form.F_Status" data-options="required:true,editable:false" class=" z-txt easyui-combobox" />
+        </div>
+        <div class="grid_3 val">
+            <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+            <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+        </div>
+        <div class="clear"></div>
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+        </div>
+        <table data-bind="datagrid:grid">
+            <thead>
+                <tr>
+                    <th data-options="field:'F_PKId'" hidden></th>
+                    <th data-options="field:'F_Status',align:'center',sortable:true, width:150" editor="text">旧件申诉单据状态</th>
+                    <th data-options="field:'F_OldPartsAppealCode',align:'center',sortable:true, width:170" editor="text">旧件申诉单号</th>
+                    <th data-options="field:'F_OldPartsAppealTime',sortable:true,align:'center',width:150" formatter="com.formatTime">申诉日期</th>
+                    <th data-options="field:'F_Number',align:'center',sortable:true, width:150" editor="text">旧件数量</th>
+                    <th data-options="field:'ClaimPrice',align:'center',sortable:true, width:150" editor="text">旧件索赔总金额</th>
+                    <th data-options="field:'F_InputTime',sortable:true,align:'center',width:150" formatter="com.formatTime">制单日期</th>
+                    <th data-options="field:'F_InputName',align:'center',sortable:true, width:150" editor="text">制单人</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>

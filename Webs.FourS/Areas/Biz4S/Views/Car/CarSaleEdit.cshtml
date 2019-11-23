@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Title = "新增销售单";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    @*<script src="~/Scripts/core/xlsx.full.min.js"></script>*@
+    <script src="~/Areas/Biz4S/JS/Car/CarSaleEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var viewModel = function () {
+            vms.search.apply(this, arguments);
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="2" data-bind="click:auditClick">反审核</a>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="销售信息">
+        <div class="grid_1 lbl">销售单号：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.SaleOrderCode"></span>
+        </div>
+        <div class="grid_1 lbl">销售顾问：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:ds.salemans,comboboxValue:form.SaleMan" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+        </div>
+        <div class="grid_1 lbl">合同编号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.ContractNo" class=" z-txt easyui-validatebox" data-options="validType:'length[4,30]'" />
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_1 lbl">销售日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.SaleDate" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+        </div>
+        <div class="grid_1 lbl">交车日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.DeliverCarDate" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+        </div>
+        <div class="grid_1 lbl">交车地点：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.DeliverCarPlace" class=" z-txt easyui-validatebox" data-options="validType:'length[0,200]'" />
+        </div>
+    </div>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="客户信息">
+        <div class="grid_1 lbl">联系电话：</div>
+        <div class="grid_2 val ">
+            <input type="text" data-bind="value:form.MobileTel" class="z-txt easyui-validatebox " data-options="required:true" />
+        </div>
+         <div class="grid_1 lbl">客户姓名：</div>
+        <div class="grid_2 val ">
+            <input type="text" data-bind="value:form.CustomerName" class=" z-txt easyui-validatebox" data-options="required:true" />
+        </div>        
+        <div class="grid_1 lbl">联系地址：</div>
+        <div class="grid_3 val ">
+            <input type="text" data-bind="value:form.Address" class=" z-txt easyui-validatebox" data-options="required:true" style="width:250px" />
+        </div>
+    </div>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="车辆信息">
+        <div class="grid_1 lbl">VIN：</div>
+        <div class="grid_2 val">
+            <input id="txtVin" type="text" data-bind="value:form.VIN" class="z-txt easyui-validatebox easyui-autocomplete"
+                   data-options="required:false,url:vdata.urls.vin" autocomplete="off" />
+        </div>
+        <div class="grid_1 lbl">发动机号：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.EngineCode"></span>
+        </div>
+        <div class="grid_1 lbl">合格证号：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.MeasureCode"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">品牌：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.BrandName"></span>
+            @*<input type="text" data-bind="datasource:ds.brands,comboboxValue:form.BrandID" class="z-txt easyui-combobox" data-options="required:true,editable:false" />*@
+        </div>
+        <div class="grid_1 lbl">车系：</div>
+        <div class="grid_2 val">     
+            <span data-bind="text:form.SeriesName"></span>      
+            @*<select id="selSeries" style="width: 162px; height: 25px" data-bind="options: ds.series,optionsText:'text',optionsValue:'value'"></select>*@
+        </div>
+        <div class="grid_1 lbl">车型：</div>
+        <div class="grid_2 val">            
+            <span data-bind="text:form.ModelName"></span>   
+            @*<select id="selModel" style="width: 162px; height: 25px" data-bind="options: ds.models,optionsText:'text',optionsValue:'value'"></select>*@
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">外观色：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.OutsideColor"></span>
+            @*<input data-bind="datasource:com.bindCombobox('OutsideColor'),comboboxValue:form.OutsideColor" class="z-txt easyui-combobox" data-options="editable:false" />*@
+        </div>
+        <div class="grid_1 lbl">内饰色：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.InsideColor"></span>
+            @*<input data-bind="datasource:com.bindCombobox('InsideColor'),comboboxValue:form.InsideColor" class="z-txt easyui-combobox" data-options="editable:false" />*@
+        </div>
+        @*<div class="grid_1 lbl">是否订车：</div>
+        <div class="grid_2 val">
+            <input data-bind="datasource:com.bindCombobox('YesNo'),comboboxValue:form.IsOrderCar" class="z-txt easyui-combobox" data-options="editable:false" />
+        </div>*@
+    </div>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px" title="金额与付款">
+        <div class="grid_1 lbl">销售金额：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="numberboxValue:form.SalePrice" class="z-txt easyui-numberbox " data-options="required:true" />元
+        </div>
+        <div class="grid_1 lbl">优惠金额：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="numberboxValue:form.PreferentialPrice" class="z-txt easyui-numberbox " />元
+        </div>
+        <div class="grid_1 lbl">费用总计：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="numberboxValue:form.FeeTotal" class="z-txt easyui-numberbox " data-options="required:true" readonly />元
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">预付订金：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="numberboxValue:form.Subscription" class="z-txt easyui-numberbox " />元
+        </div>
+        <div class="grid_1 lbl">付款方式：</div>
+        <div class="grid_2 val">
+            <select data-bind="datasource:com.bindCombobox('PaymentMode'),comboboxValue:form.PayType" class="z-txt easyui-combobox" data-options="editable:false" style="width:131px"></select>
+        </div>
+        <div class="grid_1 lbl">是否按揭：</div>
+        <div class="grid_2 val">
+            <select data-bind="datasource:com.bindCombobox('YesNo'),comboboxValue:form.IsInstalment" class="easyui-combobox" data-options="editable:false" style="width:131px"></select>
+        </div>
+
+        <div class="clear"></div>
+        <div class="grid_1 lbl">银行：</div>
+        <div class="grid_2 val">
+            <select data-bind="datasource:com.bindCombobox('Bank'),comboboxValue:form.BankID" class="easyui-combobox"
+                    style="width:131px" data-options="editable:false"></select>
+        </div>
+        <div class="grid_1 lbl">客户首付：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="numberboxValue:form.CustomerFistPay" class="z-txt easyui-numberbox " />元
+        </div>
+        <div class="grid_1 lbl">银行应付：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="numberboxValue:form.BankPay" class="z-txt easyui-numberbox " />元
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">欠款批准人：</div>
+        <div class="grid_2 val"><input data-bind="value:form.ArrearageRatifier" class="z-txt easyui-textbox" /></div>
+        <div class="grid_1 lbl">备注：</div>
+        <div class="grid_2 val">
+            @*<textarea data-bind="value:form.Remark" class="z-txt easyui-validatebox" />*@
+            <textarea data-bind="value:form.Remark"  data-options="validType:'length[0,200]'"></textarea>
+        </div>
+    </div>
+</div>
+
+<div class="container_16" data-bind="inputwidth:0.9" style="margin-top:10px">
+    <div class="grid_2 val">制单人：<span data-bind="text:form.InputName" /></div>
+    <div class="grid_4 val">制单时间：<span data-bind="text:form.InputTime" formatter="com.formatTime" /></div>
+    <div class="grid_2 val">审核人：<span data-bind="text:form.AuditName" /></div>
+    <div class="grid_4 val">审核时间：<span data-bind="text:form.AuditTime" formatter="com.formatTime" /></div>
+    <div class="grid_2 val">审核结果：<span data-bind="text:form.BillStateName" /></div>
+</div>

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="ClamiSaleList" defaultOrderBy='A.F_ClaimTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      B.F_ClaimPartID,B.F_ClaimCode,C.ModelID,C.ModelName,C.VIN,A.F_ClaimTime
+      ,B.P_PartCodeOld,B.P_PartNameOld,B.F_ClaimPrice,B.F_Number,D.CustomerName,D.MobileTel
+    </select>
+    <from>
+      [dbo].[F_C_Claim] A
+      inner join [F_ClaimPartList] B on A.F_ClaimCode=B.F_ClaimCode
+      inner join [B_AutoArchives] C on A.B_ChassisCode=C.VIN
+      left join B_Customer D on D.VIN=C.VIN
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.F_ClaimCode'  cp='like'></field>
+      <field name='A.F_ClaimTime'  cp='daterange'></field>
+    </where>
+  </settings>
+  <settings name="ReturnOldPartsList" defaultOrderBy='B.F_ClaimTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.F_PKId as ID ,A.SPDCode AS F_ClaimCode,B.F_ClaimTime,A.CarType as ModelName,A.VIN,A.UName as CustomerName
+      ,A.UTel as MobileTel,A.P_PartCode as P_PartCodeOld
+      ,A.P_PartName as P_PartNameOld,A.F_Total as F_ClaimPrice,A.F_Number,
+      case when A.F_Status =2 then '待收货' when A.F_Status =5  then '无配件' else '已收货' end as F_StatusName,
+      dbo.f_Getcodename('检验状态',A.F_ClaimOrNot) F_ClaimOrNotName,F_ClaimRemarks
+    </select>
+    <from>
+      F_C_OldPartsReturnList A
+      inner join F_C_Claim B ON A.SPDCode=B.F_ClaimCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.F_Mid'  cp='equal'></field>
+    </where>
+  </settings>
+  <settings name="ReturnOldPartsGridList" defaultOrderBy='A.F_InputTime DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.F_PKId as ID,dbo.f_Getcodename('审核状态',A.F_Status) AS Old_F_Status
+      ,A.F_OldPartsCode as Old_F_OldPartsCode,dbo.f_Getcodename('旧件返厂类型',A.F_DocType) as Old_F_DocType,
+      A.F_OldReturnTime as Old_F_OldReturnTime,A.F_InputTime as UpdateDate,F_CarryName as Old_F_CarryName
+      ,F_DeliveryNumber as Old_F_DeliveryNumber,F_Money as Old_F_Money,
+      (SELECT COUNT(*) FROM F_C_OldPartsReturnList WHERE F_Mid=A.F_PKId) AS SunOldPartsNubrm,
+      (SELECT SUM(F_ClaimPrice) FROM F_C_OldPartsReturnList WHERE F_Mid=A.F_PKId) AS SunClaimPrice
+    </select>
+    <from>
+      F_C_OldPartsReturn A
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.F_OldPartsCode'  cp='equal'></field>
+      <field name='A.F_OldReturnTime'  cp='daterange'></field>
+      <field name='A.F_CarryName'  cp='equal'></field>
+      <field name='A.F_DeliveryNumber'  cp='equal'></field>
+      <field name='A.F_Status'  cp='equal'></field>
+      <field name='A.B_CorpID' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

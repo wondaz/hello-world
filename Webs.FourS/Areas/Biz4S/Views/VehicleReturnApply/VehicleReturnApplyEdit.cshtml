@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "整车销退申请";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/biz4s/JS/VehicleReturnApply/VehicleReturnApplyEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var viewModel = function () {
+            vms.edit.apply(self, arguments);
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="z-toolbar">
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="2" data-bind="click:auditClick">反审核</a>
+    </div>
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="整车销退信息">
+        <div class="grid_1 lbl">申请单号：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.Vehicle_ReturnCode" />
+        </div>
+        <div class="grid_1 lbl">销售单号：</div>
+        <div class="grid_2 val">
+            <input id="txtVin" type="text" data-bind="value:form.SaleOrderCode" class="z-txt easyui-validatebox easyui-autocomplete"
+                   data-options="required:true,url:vdata.urls.SaleOrderCodes" autocomplete="off" />
+        </div>
+        <div class="grid_1 lbl">申请日期：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.SaleBackDate" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">销售价格：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.SalePrice" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">销退金额：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.Amount" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">销退原因：</div>
+        <div class="grid_11 val">
+            <textarea type="text" data-bind="value:form.BackReason" style="width:96%" class="easyui-validatebox" data-options="required:true"></textarea>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">备注：</div>
+        <div class="grid_11 val">
+            <textarea type="text" data-bind="value:form.Remark" style="width:96%" class="easyui-validatebox" data-options="required:true"></textarea>
+        </div>
+    </div>
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="">
+        <div class="grid_1 lbl">
+            客户姓名：
+        </div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.CustomerName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">
+            客户电话：
+        </div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.MobileTel" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">
+            邮编：
+        </div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.Email" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">客户地址：</div>
+        <div class="grid_11 val">
+            <textarea type="text" data-bind="value:form1.Address" style="width:96%" class="easyui-validatebox" readonly></textarea>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">VIN：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.VIN" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">品牌：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.BrandName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">车系：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.SeriesName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">车型：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.ModelName" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">外观颜色：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.OutsideColor" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">内饰颜色：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.InsideColor" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">发动机号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.EngineCode" class=" z-txt easyui-validatebox" readonly />
+        </div>
+        <div class="grid_1 lbl">合格证号：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.MeasureCode" class=" z-txt easyui-validatebox" readonly />
+        </div>
+    </div>
+</div>
+<div class="container_16" data-bind="inputwidth:0.9" style="margin-top:10px">
+    <div class="grid_6 val">制单人：<span data-bind="text:form.InputName" /></div>
+    <div class="grid_4 val">制单时间：<span data-bind="text:form.InputTime" formatter="com.formatTime" /></div>
+    <div class="grid_2 val">审核人：<span data-bind="text:form.AuditName" /></div>
+    <div class="grid_4 val">审核时间：<span data-bind="text:form.AuditTime" formatter="com.formatTime" /></div>
+</div>
+    

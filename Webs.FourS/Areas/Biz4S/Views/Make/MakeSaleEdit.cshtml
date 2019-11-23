@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "维修预约登记";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Make/MakeSaleEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var viewModel = function () {
+            vms.search.apply(this, arguments);
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="维修预约登记">
+        <div class="grid_1 lbl">预定时间：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.BookingInTime" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+        </div>
+        <div class="grid_1 lbl">预约方式：</div>
+        <div class="grid_2 val">
+            <input data-bind="datasource:com.bindCombobox('BookingFashion'),comboboxValue:form.BookingFashion" class="z-txt easyui-combobox" data-options="required:true,validType:'length[2,30]',editable:false" />
+        </div>
+        <div class="grid_1 lbl">预约单号：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.BookingCode" style="text-align:center"/>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">优先等级：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:com.bindCombobox('PRI'),comboboxValue:form.PRI" data-options="required:true,editable:false" class=" z-txt easyui-combobox" style="width: 150px;" />
+        </div>
+        <div class="grid_1 lbl">维修类型：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:com.bindCombobox('BillTypeID'),comboboxValue:form.BillTypeID" data-options="required:true,editable:false" class=" z-txt easyui-combobox" />
+        </div>
+        <div class="grid_1 lbl">预约人：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.BookingName" class="easyui-validatebox" style="width:100%" />
+        </div>
+    </div>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="客户信息">
+        <div class="grid_1 lbl">客户姓名：</div>
+        <div class="grid_2 val ">
+            <input type="text" data-bind="value:form.CustomerName" class=" z-txt easyui-validatebox" data-options="required:true" />
+        </div>
+        <div class="grid_1 lbl">联系电话：</div>
+        <div class="grid_2 val ">
+            <input type="text" data-bind="value:form.MobileTel" class="z-txt easyui-validatebox " data-options="required:true" />
+        </div>
+        <div class="grid_1 lbl">联系地址：</div>
+        <div class="grid_2 val ">
+            <input type="text" data-bind="value:form.CustomerAddress" class="easyui-validatebox" style="width:100%" />
+        </div>
+    </div>
+</div>
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="报修信息">
+        <div class="grid_1 lbl">车牌号码：</div>
+        <div class="grid_2 val">
+            <input id="txtVin" type="text" data-bind="value:form.SignCode" class="z-txt easyui-validatebox easyui-autocomplete"
+                   data-options="url:vdata.urls.vin" />
+        </div>
+        <div class="grid_1 lbl">行驶里程：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.RunDistance" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">报修电话：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.RepairTel" class=" easyui-validatebox" style="width:100%" />
+        </div>
+
+        <div class="clear" style="margin-top:10px"></div>
+
+        <div class="grid_1 lbl">报修人名：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.RepairName" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">
+            报修地址：
+        </div>
+        <div class="grid_5 val">
+            <div>
+                <input type="text" data-bind="value:form.Address" class="easyui-validatebox" style="width:100%" />
+            </div>
+        </div>
+        <div class="clear" style="margin-top:10px"></div>
+
+        <div class="grid_1 lbl">延时分钟：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form.StayTime" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">延时说明：</div>
+        <div class="grid_5 val">
+            <input type="text" data-bind="value:form.StayExplain" class="easyui-validatebox" style="width:100%" />
+        </div>
+        <div class="clear" style="margin-top:10px"></div>
+        <div class="grid_1 lbl">故障描述：</div>
+        <div class="grid_8 val">
+            <textarea type="text" data-bind="value:form.RepairDescribe" style="width:100%" class="easyui-validatebox"></textarea>
+        </div>
+    </div>
+</div>
+<div class="container_16" data-bind="inputwidth:0.9" style="margin-top:10px">
+    <div class="grid_2 val">制单人：<span data-bind="text:form.InputName" /></div>
+    <div class="grid_4 val">制单时间：<span data-bind="text:form.InputTime" /></div>
+</div>

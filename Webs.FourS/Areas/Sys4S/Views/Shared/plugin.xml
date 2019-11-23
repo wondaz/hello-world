@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="supplier" defaultOrderBy='SupplierCode'>
+    <module>HeiBaoSCM</module>
+    <select>SupplierID AS ID, SupplierCode as CODE,SupplierName as TEXT</select>
+    <from>T_BASE_SUPPLIERINFO</from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='SupplierID' variable='ID' cp='equal'></field>
+      <field name='SupplierCode' variable='value' cp='equal'></field>
+      <field name='SupplierName' variable='text' cp='like'></field>      
+    </where>
+  </settings>
+</Area>

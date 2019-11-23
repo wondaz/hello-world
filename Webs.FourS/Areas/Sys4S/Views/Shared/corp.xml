@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="list" defaultOrderBy='A.CorpID'>
+    <module>DMS_4S</module>
+    <sql>
+      WITH CorpTree AS(
+      SELECT CAST(ROW_NUMBER() OVER(ORDER BY CorpID) AS VARCHAR(10)) AS ID1, * FROM view_corp WHERE CorpID={0}
+      UNION ALL
+      SELECT CAST(ID1+ CAST(ROW_NUMBER() OVER(ORDER BY A.CorpID) AS VARCHAR(10)) AS VARCHAR(10)), B.* FROM CorpTree A JOIN view_corp B ON A.CorpID=B.ParentID
+      )
+      SELECT T.* FROM (
+      SELECT COUNT(1)OVER() AS RowsCount,ROW_NUMBER() OVER (ORDER BY A.ID1) AS RowNum,A.CorpID,A.ParentID,A.CorpLevel,
+      CorpName,A.CorpContact,
+      A.CorpPhone,A.CorpAddress,B.CollaborationName,
+      CASE WHEN A.Enable=1 THEN '是' ELSE '否' END AS Enable
+      FROM CorpTree A LEFT JOIN T_SYS_Collaboration B ON A.CollaborationID=B.collaborationId
+      ) T WHERE T.RowNum between {1} and {2} AND T.CorpLevel>0
+    </sql>
+    <select>
+      A.CorpID,A.ParentID,A.CorpName,A.CorpContact,A.CorpPhone,A.CorpAddress,B.CollaborationName,
+      CASE WHEN A.Enable=1 THEN '是' ELSE '否' END AS Enable,A.CorpLevel
+    </select>
+    <from>
+      T_SYS_Corporation A LEFT JOIN T_SYS_Collaboration B ON A.collaborationId=B.collaborationId
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.CorpName' cp='like'></field>
+      <field name='A.Enable' cp='equal'></field>
+    </where>
+  </settings>
+  <settings name="sublist" defaultOrderBy='A.CorpID'>
+    <module>DMS_4S</module>
+    <sql>
+      WITH CorpTree AS(
+      SELECT 0 as level,* FROM view_corp WHERE CorpID={0}
+      UNION ALL
+      SELECT a.level+1, B.* FROM CorpTree A JOIN view_corp B ON A.CorpID=B.ParentID
+      )
+      SELECT A.CorpID,A.ParentID,A.CorpLevel,CorpName,A.CorpContact,A.CorpPhone,A.CorpAddress,B.UserCode,
+      CASE WHEN A.Enable=1 THEN '是' ELSE '否' END AS Enable,A.UpdatePerson,A.UpdateDate
+      FROM CorpTree A LEFT JOIN sys_user B ON A.CorpID=B.CorpID
+      WHERE A.level>0 AND B.IsAdmin=1 {1}
+    </sql>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.CorpName' cp='like'></field>
+      <field name='A.Enable' cp='equal'></field>
+    </where>
+  </settings>
+  <settings name="serviceSite" defaultOrderBy='CorpID'>
+    <module>DMS_4S</module>
+    <select>CorpName</select>
+    <from>T_SYS_Corporation</from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='collaborationId' cp='equal' value='103'></field>
+      <field name='unionId' cp='equal' value='45'></field>
+      <field name='enable'  cp='equal' value='1'></field>
+    </where>
+  </settings> 
+</Area>

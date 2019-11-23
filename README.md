@@ -1,2 +1,1 @@
-# hello-world
-hi I like program,using C#
+学习git测试的项目

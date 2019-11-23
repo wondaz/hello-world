@@ -1,0 +1,64 @@
+﻿@{
+    Layout = null;
+    ViewBag.EasyuiVersion = "1.5.2";
+    Frame.Utils.ZCookies.WriteCookies("theme", 0, Convert.ToString(ViewBag.Settings["theme"]));
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>@ViewBag.Title</title>
+        <!--加载共通CSS-->
+        <link href="~/Content/css/base.css" rel="stylesheet" type="text/css" />
+
+        <!--加载960CSS框架-->
+        <link href="~/Content/css/960/fluid/reset.css" rel="stylesheet" type="text/css"  />
+        <link href="~/Content/css/960/fluid/text.css" rel="stylesheet" type="text/css" />
+        <link href="~/Content/css/960/fluid/grid.css" rel="stylesheet" type="text/css" />
+        
+        <!--加载主题CSS-->
+        <link href="~/Content/themes/@ViewBag.Settings["theme"]/style.css" rel="stylesheet" type="text/css" />  
+        <link href="~/Scripts/jquery-easyui-@ViewBag.EasyuiVersion/themes/@ViewBag.Settings["theme"]/easyui.css" rel="stylesheet" type="text/css" />
+ 
+        <!--加载组件CSS-->  
+        <link href="~/Scripts/jquery-plugin/showloading/showLoading.css" rel="stylesheet" type="text/css" />
+        <link href="~/Scripts/jquery-plugin/ztree/css/zTreeStyle.css" rel="stylesheet" type="text/css"  />
+        <link href="~/Scripts/jquery-plugin/jnotify/jquery.jnotify.css" rel="stylesheet" type="text/css" />
+        <link href="~/Scripts/jquery-plugin/jqgrid/@ViewBag.Settings["theme"]/jquery-ui-1.8.4.custom.css" rel="stylesheet" type="text/css"/>
+
+        <!--加载样式修正CSS-->
+        <link href="~/Content/css/hack/fix.css" rel="stylesheet" type="text/css" />
+
+        <!--本页面样式-->
+        <link href="~/Content/css/page/index.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="easyui-layout" fit="true" scroll="no">
+        <noscript>
+            <div class="noscript">
+                <img src="~/Content/images/noscript.gif" alt="请开启脚本支持！" />
+            </div>
+        </noscript>
+
+        @Html.Partial("_LayoutPartial")
+  
+        <div id="closeMenu" class="easyui-menu hide" style="width:150px;">
+		    <div id="refresh">刷新</div>
+		    <div class="menu-sep"></div>
+		    <div id="closeall">全部关闭</div>
+		    <div id="closeother">除此之外全部关闭</div>
+	    </div>
+
+        <div id="notity"></div>
+       
+        <!--加载页面脚本-->
+        @Scripts.Render("~/Scripts/index")
+        <script type="text/javascript">wrapper.initSettings(@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Settings)));</script>
+        <script type="text/javascript" src="~/Scripts/jquery-easyui-@ViewBag.EasyuiVersion/jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/jquery-easyui-@ViewBag.EasyuiVersion/locale/easyui-lang-zh_CN.js"></script>
+        <!--加载图标库CSS-->
+        <link href="~/Content/css/icon/icon.css" rel="stylesheet" type="text/css" />
+    </body>
+</html>

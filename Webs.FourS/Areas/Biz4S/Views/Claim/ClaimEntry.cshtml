@@ -1,0 +1,356 @@
+﻿@{
+    ViewBag.Title = "新增索赔管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Scripts/core/xlsx.full.min.js"></script>
+    <script src="~/Areas/Biz4S/JS/Claim/ClaimEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox','datagrid']);
+        var viewModel = function () {
+            var self = this;
+            
+            vms.edit.apply(self, arguments);
+
+        };
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+       
+    </script>
+}
+<div class="clear" style="margin-top:10px"></div>
+<div  class="container_12" data-bind="inputwidth:0.9">
+    <div class="z-toolbar">
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="提交" status="1" data-bind="click:SubmitClick">提交</a>
+    </div>
+    <div id="tbs" class="easyui-tabs">
+        <div title="基本信息">
+            <div class="easyui-panel" style="width: 100%; padding: 5px;">
+                <div class="grid_1 lbl">VIN码：</div>
+                <div class="grid_2 val">
+                    <input id="txtVin" type="text" data-bind="value:form.B_ChassisCode" class="z-txt easyui-validatebox easyui-autocomplete"
+                           data-options="url:vdata.urls.vin,required:true" />
+                </div>
+                <div class="grid_1 lbl">索赔单号：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_ClaimCode" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="grid_1 lbl">服务电话：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.B_CorpTel" class=" z-txt easyui-validatebox" data-options="required:true" />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">车型：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="datasource:ds.B_AutoModel,comboboxValue:form.ModelID" class=" z-txt easyui-combobox" readonly />
+                </div>
+                <div class="grid_1 lbl">发动机号：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.EngineCode" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                @*<div class="grid_1 lbl">发动机号：</div>
+                    <div class="grid_2 val">
+                        <input type="text" data-bind="value:form.EngineCode" class=" z-txt easyui-validatebox" data-options="required:true" />
+                    </div>*@
+                <div class="clear"></div>
+                <div class="grid_1 lbl">行驶公里：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.B_B_CarRunMile" class=" z-txt easyui-validatebox" data-options="required:true" />
+                </div>
+                <div class="grid_1 lbl">车牌号码：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.B_LicensePlate" class=" z-txt easyui-validatebox" />
+                </div>
+                <div class="grid_1 lbl">单据状态：</div>
+                <div class="grid_2 val">
+                    <input data-bind="datasource:com.bindCombobox('AuditStatus'),comboboxValue:form.F_Status" class="z-txt easyui-combobox" readonly />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">客户名称：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.CustomerName" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="grid_1 lbl">联系电话：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.MobileTel" class=" z-txt easyui-validatebox" data-options="required:true" />
+                </div>
+                <div class="grid_1 lbl">身份证号：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.SellerIdentityCard" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">联系地址：</div>
+                <div class="grid_8 val">
+                    <input type="text" data-bind="value:form.Address" class="easyui-validatebox" style="width:97%" />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">购车日期：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="dateboxValue:form.SaleDate" class="z-txt easyui-datebox" readonly />
+                </div>
+                <div class="grid_1 lbl">索赔日期：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="dateboxValue:form.F_ClaimTime" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+                </div>
+                <div class="grid_1 lbl">附加费用：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_otherMoney" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">送修人：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_RepailName" class=" z-txt easyui-validatebox" data-options="required:true" />
+                </div>
+                <div class="grid_1 lbl">送修电话：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_RepailTel" class=" z-txt easyui-validatebox" data-options="required:true" />
+                </div>
+                <div class="grid_1 lbl">外派费用：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_outMoney" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl" style="display:none">配件费用：</div>
+                <div class="grid_2 val" style="display:none">
+                    <input type="text" data-bind="value:form.F_partMoney" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="grid_1 lbl">工时费用：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_hourMoney" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="grid_1 lbl">共计费用：</div>
+                <div class="grid_2 val">
+                    <input type="text" data-bind="value:form.F_Total" class=" z-txt easyui-validatebox" readonly />
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">故障描述：</div>
+                <div class="grid_8 val">
+                    <textarea type="text" data-bind="value:form.F_FaultDesc" style="width:97%" class="easyui-validatebox" data-options="required:true"></textarea>
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">故障原因：</div>
+                <div class="grid_8 val">
+                    <textarea type="text" data-bind="value:form.F_FaultReason" style="width:97%" class="easyui-validatebox" data-options="required:true"></textarea>
+                </div>
+                <div class="clear"></div>
+                <div class="grid_1 lbl">处理意见：</div>
+                <div class="grid_8 val">
+                    <textarea type="text" data-bind="value:form.F_SolveFault" style="width:97%" class="easyui-validatebox" data-options="required:true"></textarea>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="z-toolbar">
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addPartsClick">添加备件</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addParGzDm">关联故障代码</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addParGsGl">关联工时</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:ClearGrid(1)">清空工时</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addParFlgl">关联辅料</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:ClearGrid(2)">清空辅料</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addPartsJjClick">关联旧件编码</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:ClearGrid(3)">清空旧件编码</a>
+                <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除备件</a>
+            </div>
+            <div class="clear"></div>
+            <div class="easyui-panel" style="width: 100%; padding: 5px;">
+                <table data-bind="datagrid:grid">
+                    <thead>
+                        <tr>
+                            <th field="F_FaultCode" sortable="true" align="center" width="150">故障编码</th>
+                            <th field="F_FaultName" sortable="true" align="center" width="180">故障名称</th>
+                            <th field="B_DealerName" sortable="false" align="center" width="180" editor="{type: 'validatebox',options:{validType:['length[0,100]']}}">配件供应商</th>
+                            <th field="P_PartCodeOld" sortable="true" align="center" width="150">旧件编码</th>
+                            <th field="P_PartCode" sortable="true" align="center" width="150">配件编码(新件)</th>
+                            <th field="P_PartNameOld" sortable="true" align="center" width="150">旧件名称</th>
+                            <th field="P_PartName" sortable="true" align="center" width="150">配件名称(新件)</th>
+                            <th field="F_ClaimPrice" sortable="true" align="center" width="150">索赔单价(元)</th>
+                            <th field="F_Number" sortable="true" align="center" width="100">使用数量</th>
+                            <th data-options="field:'B_PartTypeName',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{editable:false,data:vdata.B_PartTypeName}}">配件属性</th>
+                            <th field="F_Total" sortable="true" align="center" width="70">配件总费用</th>
+                            <th field="F_IngredientCode" sortable="true" align="center" width="100">辅料编码</th>
+                            <th field="F_IngredientName" sortable="true" align="center" width="100">辅料名称</th>
+                            <th field="F_HourCode" sortable="true" align="center" width="100">工时编码</th>
+                            <th field="F_HourName" sortable="true" align="center" width="100">工时名称</th>
+                            <th data-options="field:'F_ClaimPartID'" hidden></th>
+                            @*<th field="ManHour" sortable="true" align="center" width="100">工时费</th>
+                                <th field="DispatchManHour" sortable="true" align="center" width="100">派工费</th>
+                                <th field="AddonsManHour" sortable="true" align="center" width="100">附加费</th>
+                                <th field="SumManHour" sortable="true" align="center" width="100">总工时费</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div title="历史维修记录">
+            <div class="clear"></div>
+            <table data-bind="datagrid:grid5">
+                <thead>
+                    <tr>
+                        <th field="F_StatusName" sortable="true" align="center" width="150">审核状态</th>
+                        <th field="B_B_CarRunMile" sortable="true" align="center" width="150">行驶里程</th>
+                        <th field="F_ClaimCode" sortable="true" align="center" width="150">索赔单号</th>
+                        <th field="F_AuditName" sortable="true" align="center" width="150">审核人</th>
+                        <th field="F_AuditRemark" sortable="true" align="center" width="220">审核意见</th>
+                        <th field="B_CorpTel" sortable="true" align="center" width="150">服务站电话</th>
+                        <th field="B_LicensePlate" sortable="true" align="center" width="150">牌照</th>
+                        <th field="B_ChassisCode" sortable="true" align="center" width="150">VIN码</th>
+                        <th field="EngineCode" sortable="true" align="center" width="150">发动机号</th>
+                        <th field="ModelName" sortable="true" align="center" width="150">车型</th>
+                        <th field="F_RepailName" sortable="true" align="center" width="150">送修人姓名</th>
+                        <th field="F_RepailTel" sortable="true" align="center" width="150">送修电话</th>
+                        <th field="F_Total" sortable="true" align="center" width="150">配件总费用</th>
+                        <th field="F_hourMoney" sortable="true" align="center" width="150">工时费用</th>
+                        <th field="F_outMoney" sortable="true" align="center" width="150">外出费用</th>
+                        <th field="F_otherMoney" sortable="true" align="center" width="150">其他费用</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div id="cesi" style="display:none">
+    <div class="clear"></div>
+    <div class="container_12" data-bind="inputwidth:0.9">
+        <div class="grid_1 lbl">故障编码：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.PB_FaultCode" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">&nbsp;</div>
+        <div class="grid_1 lbl">故障名称：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.PB_FaultName" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">&nbsp;</div>
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+        
+        <div class="clear"></div>
+        <table  data-bind="datagrid:grid1">
+            <thead>
+                <tr>
+                    <th data-options="field:'PB_FaultCode',align:'center',sortable:true, width:150">故障编码</th>
+                    <th data-options="field:'PB_FaultName0',align:'center',sortable:true, width:150">一级故障名称</th>
+                    <th data-options="field:'PB_FaultName1',align:'center',sortable:true, width:150">二级故障名称</th>
+                    <th data-options="field:'PB_FaultName2',align:'center',sortable:true, width:150">三级故障名称</th>
+                    <th data-options="field:'PB_FaultName3',align:'center',sortable:true, width:150">四级故障名称</th>
+                    <th data-options="field:'PB_FaultName',align:'center',sortable:true, width:150">五级故障名称</th>
+                    <th data-options="field:'SSerialId'" hidden></th>
+                </tr>
+            </thead>
+        </table>
+    </div>        
+</div>
+<div id="gsgl" style="display:none">
+    <div class="container_12" data-bind="inputwidth:0.9">
+        <div>&nbsp;</div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">工时编码：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form2.ManHourCode" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">&nbsp;</div>
+        <div class="grid_1 lbl">工时名称：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form2.ManHourDescribe" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">&nbsp;</div>
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:gssearchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:gsclearClick" icon="icon-clear">清空</a>
+
+        <div class="clear"></div>
+        <table  data-bind="datagrid:grid2">
+            <thead>
+                <tr>
+                    <th data-options="field:'ManHourCode',align:'center',sortable:true, width:150">工时编码</th>
+                    <th data-options="field:'ManHourDescribe',align:'center',sortable:true, width:150">工时名称</th>
+                    <th data-options="field:'ManHour',align:'center',sortable:true, width:150">工时费用</th>
+                    <th data-options="field:'DispatchManHour',align:'center',sortable:true, width:150">派工费用</th>
+                    <th data-options="field:'AddonsManHour',align:'center',sortable:true, width:150">附加费用</th>
+                    <th data-options="field:'F_Total',align:'center',sortable:true, width:150">总工时费</th>
+                </tr>
+            </thead>
+        </table>
+    </div>        
+</div>
+<div id="flgl" style="display:none">
+    <div>&nbsp;</div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">辅料编码：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form3.F_IngredientCode" class=" z-txt easyui-validatebox" />
+    </div>
+    <div class="grid_1 lbl">&nbsp;</div>
+    <div class="grid_1 lbl">辅料名称：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form3.F_IngredientName" class=" z-txt easyui-validatebox" />
+    </div>
+    <div class="grid_1 lbl">&nbsp;</div>
+    <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:flglsearchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+    <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:flglclearClick" icon="icon-clear">清空</a>
+    <div class="clear"></div>
+    <table data-bind="datagrid:grid3">
+        <thead>
+            <tr>
+                <th data-options="field:'F_IngredientCode',align:'center',sortable:true, width:200">辅料编码</th>
+                <th data-options="field:'F_IngredientName',align:'center',sortable:true, width:200">辅料名称</th>
+                <th data-options="field:'F_InPrice',align:'center',sortable:true, width:200">辅料单价</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+    @*新增窗口*@
+    <script type="text/html" id="addParts-template">
+        <div class="container_12" style="height: 280px; overflow: auto;">
+            <div class="clear" style="height: 5px;"></div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">拼音码：</div>
+            <div class="grid_9 val">
+                <input id="txtSpellCode" type="text" data-bind="value:wform.SpellAb" class="z-txt easyui-autocomplete" data-options="url:vdata.urls.partsSpell,required:true" style="width: 248px" autocomplete="off" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">备件编码：</div>
+            <div class="grid_9 val">
+                <span data-bind="text:wform.SparePartCode" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">备件名称：</div>
+            <div class="grid_9 val">
+                <span data-bind="text:wform.SparePartName" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">备件规格：</div>
+            <div class="grid_9 val">
+                <span data-bind="text:wform.Spec" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">计量单位：</div>
+            <div class="grid_9 val">
+                <span data-bind="text:wform.Unit" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">备件单价：</div>
+            <div class="grid_9 val">
+                <span data-bind="text:wform.Price" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">实时库存：</div>
+            <div class="grid_9 val">
+                <span data-bind="text:wform.Stock" />
+            </div>
+            <div class="clear"></div>
+            <div class="grid_3 lbl">出库数量：</div>
+            <div class="grid_9 val">
+                <input id="txtQty" type="text" data-bind="numberboxValue:wform.Quantity" class="easyui-numberbox" data-options="min: 0,max:999999,required:true" style="width: 248px" />
+            </div>
+
+            <div class="clear"></div>
+            <div style="text-align: center;">
+                <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">添加</a>
+                <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">关闭</a>
+            </div>
+
+        </div>
+    </script>

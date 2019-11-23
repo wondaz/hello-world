@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "销售单管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    @*<script src="~/Scripts/core/xlsx.full.min.js"></script>*@
+    <script src="~/Areas/Biz4S/JS/Car/carSaleList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_1 val">客户电话：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form.MobileTel" class="z-txt easyui-validatebox" />
+    </div>
+    <div class="grid_1 val">销售顾问：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.Salemans,comboboxValue:form.Saleman" class="z-txt easyui-combobox" />
+    </div>
+    <div class="grid_1 val">VIN：</div>
+    <div class="grid_2 val">
+        <input id="txtVin" type="text" data-bind="value:form.VIN" class="z-txt easyui-autocomplete" data-options="url:vdata.urls.vin" autocomplete="off" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 val">客户名称：</div>
+    <div class="grid_2 val">
+        <input class="z-txt easyui-validatebox" data-bind="value:form.CustomerName">
+    </div>
+    <div class="grid_1 val">单据状态：</div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('auditStatus'),comboboxValue:form.BillState" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_1 val">销售日期：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form.SaleDate" class="z-txt easyui-daterange" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-door_out" title="出库" data-bind="click:outStockClick">出库</a>
+
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'SaleOrderID'" hidden></th>
+            <th data-options="field:'BillState'" hidden></th>
+            <th data-options="field:'BillStateName',align:'center',sortable:false, width:80">单据状态</th>
+            <th data-options="field:'SaleOrderCode',align:'center',sortable:true, width:120">订单号</th>
+            <th data-options="field:'VIN',align:'center',sortable:true, width:150">VIN</th>
+            <th data-options="field:'CustomerName',align:'center',sortable:true, width:80">客户名称</th>
+            <th data-options="field:'MobileTel',align:'center',sortable:true, width:100">客户电话</th>
+            <th data-options="field:'SaleMan',align:'center',sortable:true, width:80">销售顾问</th>
+            <th data-options="field:'SaleDate',align:'center',sortable:true, width:90" formatter="com.formatDate">销售日期</th>
+            <th data-options="field:'FeeTotal',sortable:true,align:'right',width:70">总金额</th>
+            <th data-options="field:'IsPay',sortable:true,align:'center',width:70" formatter="com.formatCheckbox">是否付款</th>
+            <th data-options="field:'IsOut',sortable:true,align:'center',width:70" formatter="com.formatCheckbox">是否出库</th>
+            <th data-options="field:'InputName',align:'center',sortable:true, width:80">制单人</th>
+            <th data-options="field:'InputTime',align:'center',sortable:true, width:130" formatter="com.formatTime">制单日期</th>
+            <th data-options="field:'AuditName',align:'center',sortable:true, width:80">审核人</th>
+            <th data-options="field:'AuditTime',align:'center',sortable:true, width:130" formatter="com.formatTime">审核日期</th>
+        </tr>
+    </thead>
+</table>

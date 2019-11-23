@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "旧件申诉信息录入";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    @*<script src="~/Scripts/core/xlsx.full.min.js"></script>*@
+    <script src="~/Areas/Biz4S/JS/OldReturnAppeal/OldReturnAppealEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox','datagrid']);
+        var viewModel = function () {
+            var self = this;
+            vms.edit.apply(self, arguments);
+
+        };
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+       // var formatDepts = utils.fnValueToText(vdata.dataSource.deptList);
+    </script>
+}
+
+<div class="clear" style="margin-top:10px"></div>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="z-toolbar">
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+    </div>
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="基本信息">
+        <div class="grid_1 lbl">审诉单号：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.F_OldPartsAppealCode" />
+        </div>
+        <div class="grid_1 lbl">申诉时间：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="dateboxValue:form.F_OldPartsAppealTime" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+        </div>
+        <div class="grid_1 lbl">单据状态：</div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="datasource:com.bindCombobox('F_Status'),comboboxValue:form.F_Status" data-options="required:true,editable:false" class=" z-txt easyui-combobox" />
+        </div>
+        <div class="grid_3 val">
+            服务站电话：<input type="text" data-bind="value:form.B_CorpTel" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_1 lbl">申诉理由：</div>
+        <div class="grid_11 val">
+            <textarea type="text" data-bind="value:form.F_AppealReason" style="width:96%" class="easyui-validatebox" data-options="required:true"></textarea>
+        </div>
+    </div>
+    <div class="easyui-panel" style="width: 100%; padding: 5px;" title="旧件申诉明细">
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:SelectOldParts">选择旧件</a>
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+            @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:SelectOldParts">未录系统单浏览</a>*@
+        </div>
+        <table id="gridlist" data-bind="datagrid:grid">
+            <thead>
+                <tr>
+                    <th data-options="field:'F_PKId'" hidden>主键</th>
+                    @*<th data-options="field:'F_ClaimCode',align:'center',sortable:false, width:100">旧件索赔单号</th>
+    <th data-options="field:'Old_F_OldPartsCode',align:'center',sortable:true, width:150">旧件返厂单号</th>
+    <th data-options="field:'F_ClaimTime',align:'center',sortable:true, width:100">索赔时间</th>
+    <th data-options="field:'Old_F_OldReturnTime',align:'center',sortable:true, width:100">旧件寄回时间</th>
+    <th data-options="field:'P_PartCodeOld',sortable:true,align:'right',width:100">旧件编码</th>
+    <th data-options="field:'P_PartNameOld',sortable:true,align:'center',width:100">旧件名称</th>
+    <th data-options="field:'F_ClaimPrice',sortable:true,align:'center',width:100">旧件索赔单价</th>
+    <th data-options="field:'Old_F_Money',sortable:true,align:'center',width:100">旧件数量</th>
+    <th data-options="field:'SunOldPartsNubrm',sortable:true,align:'center',width:100">旧件检验状态</th>*@
+
+                    <th data-options="field:'F_ClaimCode',align:'center',sortable:true, width:150" >旧件所属索赔单号</th>
+                    <th data-options="field:'F_OldPartsCode',align:'center',sortable:true, width:150" >旧件返厂单号</th>
+                    <th data-options="field:'F_ClaimTime',sortable:true,align:'center',width:150" formatter="com.formatTime">索赔时间</th>
+                    <th data-options="field:'F_OldReturnTime',sortable:true,align:'center',width:150" formatter="com.formatTime">旧件寄回时间</th>
+                    <th data-options="field:'P_PartCode',align:'center',sortable:true, width:150" >旧件编码</th>
+                    <th data-options="field:'P_PartName',align:'center',sortable:true, width:150">旧件名称</th>
+                    <th data-options="field:'F_ClaimPrice',align:'center',sortable:true, width:150" >索赔单价</th>
+                    <th data-options="field:'F_Number',align:'center',sortable:true, width:150" >数量</th>
+                    <th data-options="field:'F_ClaimOrNot'" hidden>旧件检验状态码</th>
+                    <th data-options="field:'CheckedName',align:'center',sortable:true, width:150" >旧件检验状态</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+<div id="OldAppealPartsGrid" style="display:none">
+    <div class="clear"></div>
+    <div class="container_12" data-bind="inputwidth:0.9">
+        <div class="grid_1 lbl">
+            旧件名称：
+        </div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.P_PartName" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_3 lbl">
+            索赔单号：<input type="text" data-bind="value:form1.SPDCode" class=" z-txt easyui-validatebox" />
+        </div>
+        <div class="grid_1 lbl">
+            索赔日期：
+        </div>
+        <div class="grid_2 val">
+            <input type="text" data-bind="value:form1.F_ClaimTime" class="easyui-daterange" data-options="editable:false" style="width:160px" />
+        </div>
+        <div class="grid_3 val">
+            <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+            <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+        </div>
+        
+        <table data-bind="datagrid:grid1">
+            <thead>
+                <tr>
+                    <th data-options="field:'F_ClaimCode',align:'center',sortable:true, width:150" editor="text">旧件所属索赔单号</th>
+                    <th data-options="field:'F_OldPartsCode',align:'center',sortable:true, width:150" editor="text">旧件返厂单号</th>
+                    <th data-options="field:'F_ClaimTime',sortable:true,align:'center',width:150" formatter="com.formatTime">索赔时间</th>
+                    <th data-options="field:'F_OldReturnTime',sortable:true,align:'center',width:150" formatter="com.formatTime">旧件寄回时间</th>
+                    <th data-options="field:'P_PartCode',align:'center',sortable:true, width:150" editor="text">旧件编码</th>
+                    <th data-options="field:'P_PartName',align:'center',sortable:true, width:150" editor="text">旧件名称</th>
+                    <th data-options="field:'F_ClaimPrice',align:'center',sortable:true, width:150" editor="text">索赔单价</th>
+                    <th data-options="field:'F_Number',align:'center',sortable:true, width:150" editor="text">数量</th>
+                    <th data-options="field:'F_ClaimOrNot'" hidden>旧件检验状态码</th>
+                    <th data-options="field:'CheckedName',align:'center',sortable:true, width:150" editor="text">旧件检验状态</th>
+                </tr>
+            </thead>
+        </table>
+    </div>    
+</div>

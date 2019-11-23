@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "用户管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <link href="~/content/css/metro/css/modern.css" rel="stylesheet" type="text/css" />
+    <script src="~/Areas/Sys4s/JS/User.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+        var formatterButton = function (value, row) {
+            var html = '<a href="#" onclick=\'setRole(' + JSON.stringify(row) + ')\' style="margin-left:10px"><span class="icon icon-group">&nbsp;</span>设置角色</a>';
+            return html;
+        };
+        //var formatDepts = utils.fnValueToText(vdata.deptList);
+    </script>
+}
+
+<div id="condition" class="container_12" style="position: relative;">
+    <div class="grid_6 val">
+        角色：
+         <input type="text" data-bind="datasource:ds.role,comboboxValue:form.RoleCode"
+               class="z-txt easyui-combobox" data-options="valueField:'RoleCode',textField:'RoleName'" />
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin: 0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="grid_3">
+       
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a id="a_add" href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addClick">新增</a>
+    <a id="a_edit" href="#" plain="true" class="easyui-linkbutton" icon="icon-edit" data-bind="click:editClick" title="编辑">编辑</a>
+    <a id="a_del" href="#" plain="true" class="easyui-linkbutton" icon="icon-cross" title="删除" data-bind="click:deleteClick">删除</a>
+    <a id="a_save" href="#" plain="true" class="easyui-linkbutton" icon="icon-save" data-bind="click:saveClick" title="保存">保存</a>
+    <a id="a_pwd" href="#" plain="true" class="easyui-linkbutton" icon="icon-key" data-bind="click:passwordClick" title="重置密码">重置密码</a>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>            
+            <th data-options="field:'UserCode',align:'left',sortable:true, width:120" editor="{type:'validatebox',options:{required:true}}">登录名</th>
+            <th data-options="field:'UserName',align:'left',sortable:true, width:100" editor="{type:'validatebox',options:{required:true}}">用户名称</th>
+            <th data-options="field:'department',align:'center',sortable:true, width:150" editor="text">部门</th>            
+            <th data-options="field:'mobileTel',align:'left',sortable:true, width:200" editor="{type:'text',options:{required:true}}">手机号</th>
+            <th data-options="field:'IsEnable',align:'center',sortable:true, width:70" formatter="com.formatCheckbox" editor="{type:'checkbox',options:{on:'1',off:'0'}}">是否启用</th>
+            <th data-options="field:'UpdateDate',align:'center',sortable:true, width:130" formatter="com.formatTime">创建日期</th>
+            <th data-options="field:'Permit',align:'center',width:180" formatter="formatterButton">操作</th>
+        </tr>
+    </thead>
+</table>
+
+<script type="text/html" id="setrole-template">
+    <style type="text/css">
+        .listview {
+            margin: 0 !important;
+        }
+
+            .listview li {
+                width: 100px !important;
+                background-color: skyblue !important;
+                float: left;
+                margin: 3px;
+            }
+    </style>
+    <div style="margin:5px;height:370px;overflow:auto;">
+        <div style="border-bottom:1px solid #CCC; margin-bottom:5px;">
+            <span class="icon32 icon-user-edit32" style="padding-left:48px;font-weight:bold; font-size:14px;color:#666;" data-bind="text:UserName"></span>
+        </div>
+        <div> 拥有角色(请点击勾选)：</div>
+        <div class="metrouicss">
+            <ul class="listview"></ul>
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">确定</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">取消</a>
+    </div>
+</script>

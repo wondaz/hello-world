@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="ClaimSele" defaultOrderBy='A.ID DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.ID, dbo.f_Getcodename('审核状态',A.F_Status) F_StatusName
+      ,dbo.f_Getcodename('是否',A.F_IsPrint) IsPrintName
+      ,A.F_ClaimCode,A.B_ChassisCode,B.ModelName,C.CustomerName
+      ,A.F_InputTime,A.F_AuditName,A.F_AuditTime,A.F_AuditRemark
+      ,A.F_partMoney,A.F_hourMoney,A.F_outMoney,A.F_otherMoney,A.F_Total
+    </select>
+    <from>
+      [dbo].[F_C_Claim] A
+      left join B_AutoArchives B on A.B_ChassisCode=B.VIN
+      left join B_Customer C on C.VIN=A.B_ChassisCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.F_ClaimCode' cp='like'></field>
+      <field name='A.F_ClaimTime' cp='daterange'></field>
+      <field name='A.F_Status' cp='equal'></field>
+      <field name='A.B_ChassisCode' cp='equal'></field>
+      <field name='A.F_IsPrint' cp='equal'></field>
+      <field name='B.ModelID' cp='equal'></field>
+      <field name='A.B_CorpID' cp='equal'></field>
+    </where>
+  </settings>
+  <settings name="grid1" defaultOrderBy='PB_FaultCode DESC'>
+    <module>DMS_4S</module>
+    <select>*</select>
+    <from>
+      DMS_DataBaseNew.dbo.PB_FaultCodeTmp
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='PB_FaultCode' cp='like'></field>
+      <field name='PB_FaultName' cp='like'></field>
+    </where>
+  </settings>
+  <settings name="grid2" defaultOrderBy='UpdateDate DESC'>
+    <module>DMS_4S</module>
+    <select>
+      ManHourCode,
+      ManHourDescribe,
+      ManHour,DispatchManHour,
+      AddonsManHour,
+      ManHour+DispatchManHour+AddonsManHour as F_Total
+    </select>
+    <from>
+      S_ManHour
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='ManHourCode' cp='like'></field>
+      <field name='ManHourDescribe' cp='like'></field>
+    </where>
+  </settings>
+
+  <settings name="grid3" defaultOrderBy='xh'>
+    <module>DMS_4S</module>
+    <select>
+      AssemCode as F_IngredientCode,AssemName as F_IngredientName,InPrice as F_InPrice
+    </select>
+    <from>
+      V_AddIngredient
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='AssemCode' cp='like'></field>
+      <field name='AssemName' cp='like'></field>
+    </where>
+  </settings>
+  <settings name="grid4" defaultOrderBy='InputTime desc'>
+    <module>DMS_4S</module>
+    <select>
+      F_ClaimPartID,F_ClaimCode,CorpID,F_FaultCode,
+      F_FaultName,B_DealerName,P_PartCodeOld,P_PartCode,
+      P_PartNameOld,P_PartName,F_ClaimPrice,F_Number,
+      dbo.f_Getcodename('配件属性',B_PartTypeName) B_PartTypeName,
+      F_Total,F_IngredientCode,
+      F_IngredientName,F_HourCode,F_HourName,InputTime,InputName
+    </select>
+    <from>
+      F_ClaimPartList
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='F_ClaimCode' cp='equal'></field>
+    </where>
+  </settings>
+  
+  <settings name="grid5" defaultOrderBy='F_InputTime desc'>
+    <module>DMS_4S</module>
+    <select>
+      dbo.f_Getcodename('审核状态',A.F_Status) F_StatusName,A.B_B_CarRunMile,A.F_ClaimCode,A.F_AuditName,
+      A.F_AuditRemark,A.B_CorpTel,A.B_LicensePlate,A.B_ChassisCode
+      ,B.EngineCode,B.ModelName,A.F_RepailName,A.F_RepailTel
+      ,(select SUM(F_Total) from F_ClaimPartList where F_ClaimCode=A.F_ClaimCode) as F_Total
+      ,CONVERT(money,ISNULL(E.ManHour,0.00)) as F_hourMoney
+      ,CONVERT(money,ISNULL(E.DispatchManHour,0.00)) as F_outMoney
+      ,CONVERT(money,ISNULL(E.AddonsManHour,0.00)) as F_otherMoney
+      ,A.F_InputTime
+    </select>
+    <from>
+      F_C_Claim A
+      left join B_AutoArchives B ON A.B_ChassisCode=B.VIN
+      left join S_ManHour E on B.ModelID=E.ModelID and B.BrandID=E.BrandID
+    </from>
+    <where>
+      <field name='A.B_ChassisCode' cp='equal'></field>
+      <field name='A.B_CorpID' cp='equal'></field>
+    </where>
+  </settings>
+
+  
+</Area>
+

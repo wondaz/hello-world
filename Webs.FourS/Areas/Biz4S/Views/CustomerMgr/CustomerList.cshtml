@@ -1,0 +1,113 @@
+﻿@{
+    ViewBag.Title = "客户档案管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/CustomerMgr/CustomerList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_1 lbl">
+        客户名称：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.CustomerName" style="width:100%" />
+    </div>
+    <div class="grid_1 lbl">
+        移动电话：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.MobileTel"  style="width:100%" />
+    </div>
+    <div class="grid_1 lbl">
+        销售顾问：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.Salemans,comboboxValue:form.Salesman" class="easyui-combobox" style="width:100%" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">
+        客户类别：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('TypeID'),comboboxValue:form.TypeID" style="width:100%" class="easyui-combobox" />
+    </div>
+    <div class="grid_1 lbl">
+        客户等级：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('LevelID'),comboboxValue:form.LevelID" class="easyui-combobox" style="width:100%" />
+    </div>
+    <div class="grid_1 lbl">
+        意向级别：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('IntentLevelID'),comboboxValue:form.IntentLevelID" style="width:100%" class="easyui-combobox" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">
+        建档日期：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form.InputDate" class=" easyui-daterange" style="width:100%" />
+    </div>
+    <div class="grid_1 lbl">
+        潜在客户：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('YesNo'),comboboxValue:form.ISLatency" style="width:100%" class="easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_1 lbl">
+        保有客户：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('YesNo'),comboboxValue:form.ISServer" style="width:100%" class="easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+    <div class="z-toolbar">
+        <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+        <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+
+    </div>
+    <div class="clear"></div>
+    <table id="gridlist" data-bind="datagrid:grid">
+        <thead>
+            <tr>
+                <th data-options="field:'CustomerID',align:'center',sortable:false, width:80" hidden></th>
+                <th data-options="field:'ISLatencyName',align:'center',sortable:false, width:100">是否潜在客户</th>
+                <th data-options="field:'ISServerName',align:'center',sortable:false, width:100">是否保有客户</th>
+                <th data-options="field:'CustomerName',align:'center',sortable:true, width:150">客户名称</th>
+                <th data-options="field:'MobileTel',align:'center',sortable:true, width:150">移动电话</th>
+                <th data-options="field:'FixTel',align:'center',sortable:true, width:100">固定电话</th>
+                <th data-options="field:'SexName',align:'center',sortable:true, width:100">性别</th>
+                <th data-options="field:'IntentLevelName',sortable:true,align:'right',width:100">意向等级</th>
+                <th data-options="field:'TypeName',sortable:true,align:'right',width:100">客户类别</th>
+                <th data-options="field:'LevelName',sortable:true,align:'center',width:100">客户等级</th>
+                <th data-options="field:'SaleMan',sortable:true,align:'center',width:100">销售顾问</th>
+                <th data-options="field:'InfoSourseName',sortable:true,align:'center',width:100">信息来源</th>
+                <th data-options="field:'InputDate',sortable:true,align:'center',width:130" formatter="com.formatTime">建档日期</th>
+            </tr>
+        </thead>
+    </table>
+</div>

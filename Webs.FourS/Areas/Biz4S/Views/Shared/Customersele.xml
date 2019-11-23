@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="Customersele" defaultOrderBy='CustomerID DESC'>
+    <module>DMS_4S</module>
+    <select>
+      A.CustomerID,A.CustomerCode,A.CustomerName,
+      dbo.f_Getcodename('客户等级',A.LevelID) LevelName,
+      dbo.f_Getcodename('意向等级',A.IntentLevelID) IntentLevelName,
+      dbo.f_Getcodename('信息来源',A.InfoSourseID) InfoSourseName,
+      dbo.f_Getcodename('客户类别',A.TypeID) TypeName,
+      dbo.f_Getcodename('是否',A.ISLatency) ISLatencyName,
+      dbo.f_Getcodename('是否',A.ISServer) ISServerName,
+      dbo.f_Getcodename('性别',A.Sex) SexName
+      ,A.Salesman,U.UserName SaleMan,
+      A.FixTel,A.MobileTel,A.Postalcode,A.Address,A.Fax,A.TypeID,
+      A.LevelID,A.IntentLevelID,A.InfoSourseID,A.City,A.Province,A.County,A.LinkMan,
+      A.LinkManTel,A.ISPart,A.InputDate
+    </select>
+    <from>
+      B_Customer AS A
+      LEFT JOIN sys_user U ON A.Salesman = U.UserCode
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='CustomerName' cp='like'></field>
+      <field name='MobileTel' cp='like'></field>
+      <field name='Salesman' cp='like'></field>
+      <field name='TypeID' cp='equal'></field>
+      <field name='LevelID' cp='equal'></field>
+      <field name='IntentLevelID' cp='equal'></field>
+      <field name='InputDate' cp='daterange'></field>
+      <field name='ISLatency' cp='equal'></field>
+      <field name='ISServer' cp='equal'></field>
+      <field name='A.CorpID' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

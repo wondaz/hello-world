@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "4S/维修店";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+
+    <script src="~/Areas/Sys4s/JS/SubCorps.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                size: { w: 4, h: 70 },
+                url: '/api/sys4s/corp/getsubcorps',
+                pagination :false,
+                idField:'CorpID',
+                treeField: 'CorpName',
+                loadFilter: function (d) {
+                    return utils.toTreeData(d, 'CorpID', 'ParentID', "children");
+                }
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+        vm.grid.onDblClickRow = vm.editTreeClick;
+    </script>
+}
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-edit" title="编辑" data-bind="click:editTreeClick">编辑</a>
+    @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-remove" title="禁用" data-bind="click:deleteClick">删除</a>*@
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick" suffix="xlsx">导出</a>
+</div>
+<div id="condition" class="container_16" style="position: relative;">
+    <div class="grid_2 lbl">状态</div>
+    <div class="grid_3 val">
+        <input type="text" data-bind="datasource:com.bindCombobox('IsEnable'),comboboxValue:form.Enable"
+               class="z-txt easyui-combobox" data-options="showblank:true" />
+    </div>
+    <div class="grid_2 lbl">企业名称</div>
+    <div class="grid_3 val">
+        <input type="text" data-bind="value:form.CorpName" class="z-txt" />
+    </div>
+    <div class="grid_4">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin: 0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<table data-bind="treegrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'CorpID'" hidden>企业ID</th>
+            <th data-options="field:'CorpName',sortable:false,width:250,align:'left'">企业名称</th>
+            <th data-options="field:'UserCode',sortable:false,width:90,align:'left'">账号</th>
+            <th data-options="field:'CorpContact',sortable:false,width:80,align:'left'">联系人</th>
+            <th data-options="field:'CorpPhone',sortable:false,width:160,align:'left'">联系电话</th>
+            <th data-options="field:'CorpAddress',sortable:false,width:300,align:'left'">地址</th>
+            @*<th data-options="field:'CollaborationName',sortable:false,width:80,align:'left'">企业类型</th>*@
+            <th data-options="field:'CorpLevel',sortable:false,width:40,align:'left'" hidden>级别</th>
+            <th data-options="field:'Enable',sortable:false, width:40,align:'left'">启用</th>
+            <th data-options="field:'UpdatePerson',sortable:false, width:100,align:'left'">编辑人</th>
+            <th data-options="field:'UpdateDate',sortable:false, width:140,align:'left'" formatter="com.formatTime">编辑时间</th>
+        </tr>
+    </thead>
+</table>
+

@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "索赔管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Claim/ClaimList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_1 lbl">
+        索赔单号：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.F_ClaimCode" />
+    </div>
+    <div class="grid_1 lbl">
+        索赔日期：
+    </div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="value:form.F_CLAIMTIME" class="z-txt easyui-daterange" />
+    </div>
+    <div class="grid_1 lbl">
+        审核状态：
+    </div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('AuditStatus'),comboboxValue:form.F_Status" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">
+        VIN码：
+    </div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.B_ChassisCode" />
+    </div>
+    <div class="grid_1 lbl">
+        打印标签：
+    </div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('YesNo'),comboboxValue:form.F_IsPrint" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_1 lbl">
+        车型：
+    </div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:ds.B_AutoModel,comboboxValue:form.ModelID" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'ID',align:'center',sortable:false, width:80" hidden></th>
+            <th data-options="field:'F_StatusName',align:'center',sortable:false, width:100">审核状态</th>
+            <th data-options="field:'IsPrintName',align:'center',sortable:false, width:100">是否打印标签</th>
+            <th data-options="field:'F_ClaimCode',align:'center',sortable:true, width:150">索赔单号</th>
+            <th data-options="field:'B_ChassisCode',align:'center',sortable:true, width:150">VIN号</th>
+            <th data-options="field:'ModelName',align:'center',sortable:true, width:100">车型</th>
+            <th data-options="field:'CustomerName',align:'center',sortable:true, width:100">客户名称</th>
+            <th data-options="field:'F_InputTime',sortable:true,align:'center',width:130" formatter="com.formatTime">提交时间</th>
+            <th data-options="field:'F_AuditName',sortable:true,align:'right',width:100">审核人</th>
+            <th data-options="field:'F_AuditTime',sortable:true,align:'center',width:130" formatter="com.formatTime">审核时间</th>
+            <th data-options="field:'F_AuditRemark',sortable:true,align:'center',width:100">审核意见</th>
+            <th data-options="field:'F_partMoney',sortable:true,align:'center',width:100">配件费用</th>
+            <th data-options="field:'ManHour',sortable:true,align:'center',width:100">工时费用</th>
+            <th data-options="field:'DispatchManHour',sortable:true,align:'center',width:100">外出费用</th>
+            <th data-options="field:'AddonsManHour',sortable:true,align:'center',width:100">其他费用</th>
+            <th data-options="field:'F_Total',sortable:true,align:'center',width:100">总额</th>
+        </tr>
+    </thead>
+</table>

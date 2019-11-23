@@ -1,0 +1,284 @@
+﻿@{
+    ViewBag.Title = "车辆维修结算单";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Settle/SettlementEdit.js"></script>
+    <script type="text/javascript">
+        var viewModel = function () {
+            var self = this;
+            vm.apply(self, arguments);
+            vm.calcTotalMoney = function (gridEdit,originalPrice,discount,finalPrice) {
+                return function (editors) {
+                    if (originalPrice !== '') {
+                        var manHourFee = editors[originalPrice].target;//工时费
+                        var agio = editors[discount].target;//优惠金额
+                        var agioManHourFee = editors[finalPrice].target;//折后工时费
+                        com.readOnlyHandler('input')(manHourFee.textbox('textbox'), true);
+                        com.readOnlyHandler('input')(agioManHourFee.textbox('textbox'), true);
+                        var calcuRow = function () {
+                            var rowFee = Number(manHourFee.val()) - Number(agio.val());
+                            agioManHourFee.numberbox('setValue', rowFee);
+                            gridEdit.accept();
+                            self.sumMoney();
+                        }
+                        agio.textbox('textbox').blur(calcuRow);
+                    }
+                    //帐类改变时，重新计算金额
+                    var accountType = editors['AccountType'].target;
+                    var typeVal = accountType.combobox('getValue');
+                    accountType.combobox({
+                        onChange: function (newVal,oldVal) {
+                            if (oldVal === '') return;
+
+                            gridEdit.accept();
+                            self.sumMoney();
+                        }
+                    });
+                    accountType.combobox('setValue', typeVal);
+                }
+            }
+
+            this.grid1.OnAfterCreateEditor = function(editors){
+                vm.calcTotalMoney(self.gridEdit1,'ManHourFee','Agio','AgioManHourFee')(editors);
+            };
+
+            this.grid2.OnAfterCreateEditor = function(editors){
+                vm.calcTotalMoney(self.gridEdit2,'PartFee','Agio','AgioPartFee')(editors);
+            };
+
+            this.grid3.OnAfterCreateEditor = function(editors){
+                vm.calcTotalMoney(self.gridEdit3,'','','')(editors);
+            };
+        };
+
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+        var formatAccount = utils.fnValueToText(vdata.accountList);
+        var formatBigClass = utils.fnValueToText(vdata.bigClassList);
+        var formatSmallClass = utils.fnValueToText(vdata.smallClassList);
+        var formatWorkTeam = utils.fnValueToText(vdata.workTeamList);
+        var formatWorkShop = utils.fnValueToText(vdata.workShopList);
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+</div>
+<div id="master" class="container_16" data-bind="inputwidth:0.9">
+    <div class="grid_2 lbl">维修工单：</div>
+    <div class="grid_2 val">
+        <div id="divDispatch">
+            <input data-bind="datasource:ds.dispatchCodes,comboboxValue:form.DispatchID" class="easyui-combobox" data-options="required:true,editable:false" style="width:140px" />
+        </div>
+        <span id="spanDispatch" data-bind="text:form.DispatchCode"></span>
+    </div>
+
+    <div class="grid_2 lbl">车牌号：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.SignCode"></span>
+
+    </div>
+    <div class="grid_2 lbl "> 服务顾问：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.EmpName"></span>
+    </div>
+    <div class="grid_2 lbl "> 接车时间：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.MeetAutoTime"></span>
+    </div>
+    <div class="clear"></div>
+
+    <div class="grid_2 lbl"> 结算单号：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.BalanceCode"></span>
+    </div>
+    <div class="grid_2 lbl"> 客户姓名：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.CustomerName"></span>
+    </div>
+    <div class="grid_2 lbl"> 客户电话：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.MobileTel"></span>
+    </div>
+    <div class="grid_2 lbl ">交车时间：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.HandTime"></span>
+    </div>
+    <div class="clear"></div>
+
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> VIN：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.VIN"></span>
+    </div>
+    <div class="grid_2 lbl"> 车系：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.BrandName"></span>
+        <span data-bind="text:form.SeriesName"></span>
+    </div>
+    <div class="grid_2 lbl"> 车型：</div>
+    <div class="grid_6 val ">
+        <span data-bind="text:form.ModelName"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 总金额：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.Amount"></span>
+    </div>
+    <div class="grid_2 lbl"> 报修人：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.RepairName"></span>
+    </div>
+    <div class="grid_2 lbl"> 报修人电话：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.RepairTel"></span>
+    </div>
+    <div class="grid_2 lbl"> 备注：</div>
+    <div class="grid_6 val">
+        <span data-bind="text:form.Demo"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 工时费：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.ManHourFee"></span>
+    </div>
+    <div class="grid_2 lbl"> 工时折扣：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.ManHourAgio"></span>
+    </div>
+    <div class="grid_2 lbl"> 折后工时费：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.AgioManHourFee"></span>
+    </div>
+    <div class="grid_2 lbl"> 附加费：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.AddonsFee"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 备件费：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.SparepartFee"></span>
+    </div>
+    <div class="grid_2 lbl"> 备件折扣：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.SparepartAgio"></span>
+    </div>
+    <div class="grid_2 lbl"> 折后备件费：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.AgioSparepartFee"></span>
+    </div>
+
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 现金金额：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.AccountReceivable"></span>
+    </div>
+    <div class="grid_2 lbl"> 保险金额：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.InsuranceSum"></span>
+    </div>
+    <div class="grid_2 lbl"> 索赔金额：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.CounterclaimSum"></span>
+    </div>
+
+    <div class="grid_2 lbl"> 损耗金额：</div>
+    <div class="grid_2 val ">
+        <span data-bind="text:form.BosomSum"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 实收金额：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.EarningSum" class="easyui-validatebox z-txt" data-options="required:true" />
+    </div>
+    <div class="grid_2 lbl"> 保险公司：</div>
+    <div class="grid_2 val ">
+        <input id="cbxInsureCorp" type="text" data-bind="datasource:ds.InsureCorpName,comboboxValue:form.InsureCorp" class=" z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="easyui-tabs">
+    <div title="维修工时">
+        <table data-bind="datagrid:grid1">
+            <thead>
+                <tr>
+                    <th data-options="field:'ManhourCode',align:'center',sortable:false, width:70">工时编码</th>
+                    <th data-options="field:'ManhourDescribe',align:'center',sortable:true, width:180">工时描述</th>
+                    <th data-options="field:'BillTypeID',align:'center',sortable:false, width:80" formatter="formatBigClass">维修大类</th>
+                    <th data-options="field:'ItemTypeID',align:'center',sortable:false, width:80" formatter="formatSmallClass">维修小类</th>
+                    @*<th data-options="field:'DispatchManhour',sortable:true,align:'right',width:70">派工费</th>*@
+                    <th data-options="field:'ManHourFee',align:'right',sortable:true, width:70" editor="{type: 'numberbox'}">工时费</th>
+                    <th data-options="field:'Agio',align:'right',sortable:true, width:70" editor="{type: 'numberbox',options:{min: 0, precision: 2}}">优惠金额</th>
+                    <th data-options="field:'AgioManHourFee',align:'right',sortable:true, width:70" editor="{type: 'numberbox'}">折后工时费</th>
+                    <th data-options="field:'AccountType',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.accountList}}" formatter="formatAccount">帐类</th>
+                    <th data-options="field:'ClassID',align:'center',sortable:false, width:80" formatter="formatWorkTeam">维修班组</th>
+                    <th data-options="field:'WorkShopID',align:'center',sortable:false, width:80" formatter="formatWorkShop">维修工位</th>
+                    <th data-options="field:'Remark',align:'center',sortable:true, width:120">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="维修备件">
+        <table data-bind="datagrid:grid2">
+            <thead>
+                <tr>
+                    <th data-options="field:'SparePartCode',align:'center',sortable:false, width:120">备件编码</th>
+                    <th data-options="field:'SparePartName',align:'center',sortable:true, width:180">备件名称</th>
+                    <th data-options="field:'Unit',align:'center',sortable:true, width:120">规格型号</th>
+                    <th data-options="field:'Unit',align:'center',sortable:true, width:60">单位</th>
+                    <th data-options="field:'Quantity',align:'right',sortable:false, width:100">数量</th>
+                    <th data-options="field:'Price',sortable:true,align:'right',width:60">单价</th>
+                    <th data-options="field:'PartFee',align:'right',sortable:true, width:80" editor="{type: 'numberbox'}">备件费</th>
+                    <th data-options="field:'Agio',align:'right',sortable:true, width:70" editor="{type: 'numberbox',options:{min: 0, precision: 2}}">优惠金额</th>
+                    <th data-options="field:'AgioPartFee',align:'right',sortable:true, width:80" editor="{type: 'numberbox'}">折后备件费</th>
+                    <th data-options="field:'AccountType',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.accountList}}" formatter="formatAccount">帐类</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="附加项目">
+        <table data-bind="datagrid:grid3">
+            <thead>
+                <tr>
+                    <th data-options="field:'AppendName',align:'center',sortable:false, width:180">附加项目</th>
+                    <th data-options="field:'AccountType',align:'center',sortable:false, width:80" editor="{type:'combobox',options:{required:true,editable:false,data:vdata.accountList}}" formatter="formatAccount">帐类</th>
+                    <th data-options="field:'AppendFee',align:'right',sortable:false, width:120">项目费用</th>
+                    <th data-options="field:'Remark',align:'center',sortable:false, width:180">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="总检信息">
+        <table data-bind="datagrid:grid4">
+            <thead>
+                <tr>
+                    <th data-options="field:'FinishTime',align:'center',sortable:false, width:150">竣工时间</th>
+                    <th data-options="field:'TestDriveName',align:'center',sortable:false, width:120">试车人</th>
+                    <th data-options="field:'CensorName',align:'center',sortable:false, width:100">总检人</th>
+                    <th data-options="field:'JerqueTime',align:'center',sortable:false, width:150">检查时间</th>
+                    <th data-options="field:'JerqueVerdict',align:'center',sortable:false, width:100">总检结论</th>
+                    <th data-options="field:'Remark',sortable:false,align:'right',width:180">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@*制单时间*@
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_3 val">
+        制单人：<span data-bind="text:form.InputName"></span>
+    </div>
+    <div class="grid_3 val">
+        制单时间：<span data-bind="text:form.InputTime"></span>
+    </div>
+    <div class="grid_3 val">
+        审核人：<span data-bind="text:form.AuditName"></span>
+    </div>
+    <div class="grid_3 val">
+        审核时间：<span data-bind="text:form.AuditTime"></span>
+    </div>
+    <div class="clear"></div>
+</div>

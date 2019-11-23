@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "车辆档案管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/CarArchives/AutoArchivesList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                //singleSelect:false,
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_1 lbl">品牌：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.B_AutoBrand,comboboxValue:form.BrandID" class="easyui-combobox" />
+    </div>
+    <div class="grid_1 lbl">车系：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.B_AutoSeries,comboboxValue:form.SeriesID" class="easyui-combobox" />
+    </div>
+    <div class="grid_1 lbl">车型：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.B_AutoModel,comboboxValue:form.ModelID" class="easyui-combobox" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">VIN码：</div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.VIN" />
+    </div>
+    <div class="grid_1 lbl">发动机号：</div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.EngineCode" />
+    </div>
+    <div class="grid_1 lbl">车牌号：</div>
+    <div class="grid_2 val">
+        <input class="easyui-validatebox" data-bind="value:form.SignCode" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+    <table id="gridlist" data-bind="datagrid:grid">
+        <thead>
+            <tr>
+                <th data-options="field:'ID'" hidden></th>
+                <th data-options="field:'SignCode',align:'center',sortable:false, width:100">车牌号</th>
+                <th data-options="field:'CarType',align:'center',sortable:true, width:80">车辆类型</th>
+                <th data-options="field:'CarState',align:'center',sortable:true, width:80">车辆状态</th>
+                <th data-options="field:'VIN',align:'center',sortable:true, width:150">VIN码</th>
+                <th data-options="field:'CustomerName',align:'center',sortable:true, width:100">客户名称</th>
+                <th data-options="field:'MobileTel',align:'center',sortable:true, width:100">移动</th>
+                <th data-options="field:'BrandName',sortable:true,align:'center',width:80">品牌</th>
+                <th data-options="field:'SeriesName',sortable:true,align:'center',width:100">车系</th>
+                <th data-options="field:'ModelName',sortable:true,align:'center',width:160">车型</th>
+                <th data-options="field:'OutsideColor',sortable:true,align:'center',width:80">外观色</th>
+                <th data-options="field:'InsideColor',sortable:true,align:'center',width:80">内饰色</th>
+                <th data-options="field:'EngineCode',sortable:true,align:'center',width:100">发动机号</th>
+                <th data-options="field:'UpdateDate',sortable:true,align:'center',width:130" formatter="com.formatTime">建档日期</th>
+            </tr>
+        </thead>
+    </table>
+</div>

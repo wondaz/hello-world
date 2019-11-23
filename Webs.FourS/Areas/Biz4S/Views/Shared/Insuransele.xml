@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="InsurSeleList" defaultOrderBy='InsureTypeID DESC'>
+    <module>DMS_4S</module>
+    <select>
+      SerialID,InsureTypeID,InsureMoney,InsureFee,FactAmount,Remark as Remark_Detail
+    </select>
+    <from>
+      A_InsSaleDetail
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='InsSaleID' cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

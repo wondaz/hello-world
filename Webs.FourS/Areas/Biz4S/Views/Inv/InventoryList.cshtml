@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "备件出库管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Scripts/core/xlsx.full.min.js"></script>
+    <script src="~/Areas/Biz4S/JS/Inv/InventoryList.js"></script>
+    <script type="text/javascript">
+        using(['calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+                pageSize: 100,
+                selectOnCheck:false,
+                checkOnSelect:false
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_3 val">
+        备件编码：
+        <input class="z-txt easyui-validatebox" data-bind="value:form.SparePartCode">
+    </div>
+    <div class="grid_3 val">
+        备件名称：
+        <input class="z-txt easyui-validatebox" data-bind="value:form.SparePartName">
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    <table>
+        <tr>
+            <td style="width:10px"></td>
+            <td style="margin-right:20px;vertical-align:middle"><a href="/excel/备件库存导入模板.xlsx">模板</a></td>
+            <td style="width:10px"></td>
+            <td style="vertical-align:middle">
+                <input type="file" id="xlsxFile" style="width: 160px" />
+            </td>
+            <td>
+                <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:importClick">导入</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'PartTypeName',align:'center',sortable:false, width:100">备件类型</th>
+            <th data-options="field:'SparePartCode',align:'center',sortable:false, width:140">备件编码</th>
+            <th data-options="field:'SparePartName',align:'center',sortable:true, width:140">备件名称</th>
+            <th data-options="field:'Spec',align:'center',sortable:true, width:80">规格型号</th>
+            <th data-options="field:'Unit',align:'center',sortable:true, width:80">计量单位</th>
+            <th data-options="field:'StockName',align:'center',sortable:true, width:80">仓库</th>
+            <th data-options="field:'Price',align:'right',sortable:true, width:80">价格</th>
+            <th data-options="field:'Quantity',align:'right',sortable:true, width:80">库存量</th>
+            <th data-options="field:'OrderPartsQty',align:'right',sortable:true, width:120">未出库订单量</th>
+            <th data-options="field:'UsableQty',align:'right',sortable:true, width:100">可用库存</th>
+        </tr>
+    </thead>
+</table>

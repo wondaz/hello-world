@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "备件采购入库";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    @*<script src="~/Scripts/core/xlsx.full.min.js"></script>*@
+    <script src="~/Areas/Biz4S/JS/Parts/StockInEdit.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox','datebox','numberbox']);
+        var viewModel = function () {
+            vms.edit.apply(this, arguments);
+        };
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        ko.bindingViewModel(new viewModel(vdata));
+    </script>
+}
+
+<div id="master" class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_1 lbl">采购单号：</div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:ds.buyOrderCodes,comboboxValue:form.OriCode" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_1 lbl">入库日期：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="dateboxValue:form.InTime" class="z-txt easyui-datebox" data-options="required:true,editable:false" />
+    </div>
+    <div class="grid_1 lbl">入库类型：</div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('PartsInType'),comboboxValue:form.TradeType" class="z-txt easyui-combobox" data-options="readonly:true" />
+    </div>
+    <div class="grid_1 lbl">入库单号：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.StockInCode"></span>
+    </div>
+
+    <div class="clear"></div>
+    <div class="grid_1 lbl">备件仓库：</div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:ds.stocks,comboboxValue:form.StockID" class="z-txt easyui-combobox" data-options="required:true,editable:false" />
+    </div>
+    @*<div class="grid_1 lbl">库管员：</div>
+        <div class="grid_2 val">
+            <span data-bind="text:form.CorpManager"></span>
+        </div>*@
+
+    <div class="grid_1 lbl ">备注：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.Remark" class="easyui-validatebox z-txt" />
+    </div>
+    <div class="grid_1 lbl">单据状态：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.BillStateName"></span>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" data-bind="click:saveClick">保存</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+</div>
+<table id="list" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th field="SparePartCode" sortable="true" align="center" width="150">备件编码</th>
+            <th field="SparePartName" sortable="true" align="center" width="180">备件名称</th>
+            <th field="Spec" sortable="true" align="center" width="180">规格型号</th>
+            <th field="Unit" sortable="true" align="center" width="70">计量单位</th>
+            <th field="Price" sortable="true" align="right" width="100">单价</th>
+            <th field="TradeQty" sortable="true" align="right" width="100">订单数量</th>
+            <th field="Quantity" sortable="false" align="right" width="100" editor="{type: 'numberbox',options:{min: 1, max: 99999}}">实收数量</th>
+            <th field="Remark" sortable="false" align="center" width="180" editor="{type: 'validatebox',options:{validType:['length[0,100]']}}">备注</th>
+        </tr>
+    </thead>
+</table>
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_3 val">
+        制单人：<span data-bind="text:form.InputName"></span>
+    </div>
+    <div class="grid_3 val">
+        制单时间：<span data-bind="text:form.InputTime"></span>
+    </div>
+    <div class="grid_3 val">
+        审核人：<span data-bind="text:form.AuditName"></span>
+    </div>
+    <div class="grid_3 val">
+        审核时间：<span data-bind="text:form.AuditTime"></span>
+    </div>
+</div>

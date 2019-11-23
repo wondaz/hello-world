@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "备件采购订单管理";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Parts/StockInList.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div id="condition" class="container_16" style="position:relative;">
+    <div class="grid_3 val">
+        入库单号：
+        <input class="z-txt easyui-validatebox" data-bind="value:form.StockInCode">
+    </div>
+    <div class="grid_3 val">
+        入库类别：
+        <input data-bind="datasource:com.bindCombobox('PartsInType'),comboboxValue:form.TradeType" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_3 val">
+        入库日期：
+        <input type="text" data-bind="value:form.InTime" class="z-txt easyui-daterange" />
+    </div>
+    <div class="grid_3 val">
+        单据状态：
+        <input data-bind="datasource:com.bindCombobox('auditStatus'),comboboxValue:form.BillState" class="z-txt easyui-combobox" data-options="editable:false" />
+    </div>
+    <div class="grid_3 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-page_excel'" data-bind="click:downloadClick">导出</a>
+    @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="新增" data-bind="click:addClick">新增</a>*@
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-page_edit" title="浏览" data-bind="click:editClick">浏览</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-delete" title="删除" data-bind="click:deleteClick">删除</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="审核" status="1" data-bind="click:auditClick">审核</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="反审核" status="0" data-bind="click:auditClick">反审核</a>
+</div>
+
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'BillStateName',align:'center',sortable:false, width:70">单据状态</th>
+            <th data-options="field:'StockInCode',align:'center',sortable:true, width:120">入库单号</th>
+            <th data-options="field:'OriCode',align:'center',sortable:true, width:120">原单号</th>
+            <th data-options="field:'TradeTypeName',align:'center',sortable:true, width:100">入库类别</th>
+            <th data-options="field:'OriType',align:'center',sortable:true, width:100">原单类别</th>
+            <th data-options="field:'CorpManager',align:'center',sortable:true, width:60">库管员</th>
+            <th data-options="field:'InTime',align:'center',sortable:true, width:90" formatter="com.formatDate">入库日期</th>
+            <th data-options="field:'StockName',align:'center',sortable:true, width:100">仓库</th>
+            <th data-options="field:'InputName',align:'center',sortable:true, width:80">制单人</th>
+            <th data-options="field:'InputTime',align:'center',sortable:true, width:130" formatter="com.formatTime">制单日期</th>
+            <th data-options="field:'AuditName',align:'center',sortable:true, width:80">审核人</th>
+            <th data-options="field:'AuditTime',align:'center',sortable:true, width:130" formatter="com.formatTime">审核日期</th>
+            @*<th data-options="field:'TotalAmount',sortable:true,align:'right',width:70">总金额</th>*@
+            <th data-options="field:'Remark',align:'center',sortable:true, width:100">备注</th>
+        </tr>
+    </thead>
+</table>

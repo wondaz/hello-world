@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "备件销售付款";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Fin/partsPayList.js"></script>
+    <script type="text/javascript">
+        using(['validatebox','combobox']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div id="condition" class="container_12" style="position: relative;">
+    <div class="grid_3 val">
+        销售单号：
+        <input id="txtVin" type="text" data-bind="value:form.SellOrderCode" class="z-txt easyui-validatebox" style="width:110px" autocomplete="off" />
+    </div>
+    <div class="grid_2 val">
+        销售顾问：
+        <input type="text" data-bind="datasource:ds.Salemans,comboboxValue:form.Seller" class="z-txt easyui-combobox" style="width: 100px;" data-options="editable:false" />
+    </div>
+    <div class="grid_3 val">
+        销售日期：
+        <input type="text" data-bind="value:form.SellTime" class="z-txt easyui-daterange" style="width: 150px" />
+    </div>
+    <div class="grid_2 val">
+        已付款：
+        <input type="text" data-bind="datasource:com.bindCombobox('YesNo'),comboboxValue:form.IsPay" class="z-txt easyui-combobox" style="width: 60px;" data-options="editable:false" />
+    </div>
+    <div class="grid_2 val">
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin: 0 15px;">查询</a>
+        <a id="a_reset" href="#" class="easyui-linkbutton" data-bind="click:clearClick" icon="icon-clear">清空</a>
+    </div>
+    <div class="clear"></div>
+</div>
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="付款" data-bind="click:addClick">收款</a>
+</div>
+
+<table data-bind="datagrid:grid1">
+    <thead>
+        <tr>
+            <th data-options="field:'SellOrderCode',align:'center',sortable:true, width:140">销售单号</th>
+            <th data-options="field:'SellTime',align:'center',sortable:true, width:90" formatter="com.formatDate">销售日期</th>
+            <th data-options="field:'Seller',align:'center',sortable:true, width:80">销售顾问</th>            
+            <th data-options="field:'CustomerName',align:'center',sortable:true, width:80">客户姓名</th>
+            <th data-options="field:'MobileTel',align:'center',sortable:true, width:100">客户电话</th>
+            <th data-options="field:'TotalAmount',align:'right',sortable:true, width:100">总金额</th>
+            <th data-options="field:'SumPaid',align:'right',sortable:true, width:100">已收金额</th>
+            <th data-options="field:'Debt',align:'right',sortable:false, width:100">欠款金额</th>
+            <th data-options="field:'TypeName',align:'center',sortable:true, width:80">客户类型</th>
+            <th data-options="field:'Remark',align:'center',sortable:true, width:140">备注</th>            
+        </tr>
+    </thead>
+</table>
+
+<div class="easyui-panel" style="width: 100%; height: 220px; padding: 5px;" title="客户付款历史">
+    <table data-bind="datagrid:grid2">
+        <thead>
+        <tr>
+            <th data-options="field:'PaymentCode',align:'center',sortable:true, width:130">收款单号</th>
+            <th data-options="field:'PaymentTime',align:'center',sortable:true, width:90" formatter="com.formatDate">收款日期</th>
+            <th data-options="field:'PayMoney',align:'right',sortable:true, width:80">收款金额</th>
+            <th data-options="field:'PaymentModeName',align:'center',sortable:true, width:100">收款类型</th>
+            @*<th data-options="field:'CustomerName',align:'center',sortable:true, width:80">客户名称</th>
+            <th data-options="field:'BillType',align:'center',sortable:true, width:100">业务类型</th>
+            <th data-options="field:'BillCode',align:'center',sortable:true, width:130">销售单号</th>*@
+            <th data-options="field:'Cashier',align:'center',sortable:true, width:100">出纳员</th>
+            <th data-options="field:'InvoiceCode',align:'center',sortable:true, width:100">发票号</th>
+            <th data-options="field:'CheckCode',align:'center',sortable:true, width:100">支票号</th>
+            <th data-options="field:'Remark',align:'center',sortable:true, width:100">备注</th>
+            <th data-options="field:'InputTime',align:'center',sortable:true, width:150" formatter="com.formatTime">操作时间</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/html" id="addPartsPayItem-template">
+    <div class="container_12" style="height: 250px; overflow: auto;">
+        <div class="clear" style="height: 5px;"></div>
+        <div class="grid_2 lbl">收款单号：</div>
+        <div class="grid_4 val">
+            <span data-bind="text:wform.PaymentCode"></span>
+        </div>
+        <div class="grid_2 lbl">收款日期：</div>
+        <div class="grid_4 val">
+            <input type="text" data-bind="dateboxValue:wform.PaymentTime" class="z-txt easyui-datebox" style="width: 110px" data-options="editable:false" />
+        </div>
+        <div class="clear"></div>
+
+        <div class="grid_2 lbl">总金额：</div>
+        <div class="grid_4 val">
+            ￥<span data-bind="text:wform.Amount"></span>
+        </div>
+        <div class="grid_2 lbl">已收款：</div>
+        <div class="grid_4 val">
+            ￥<span data-bind="text:wform.SumPaid"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_2 lbl">本次收款：</div>
+        <div class="grid_4 val">
+            <input type="text" data-bind="numberboxValue:wform.PayMoney" class="easyui-numberbox" data-options="min: 0.01,max:999999,required:true" precision="2" style="width: 110px" />
+        </div>
+        <div class="grid_2 lbl">收款方式：</div>
+        <div class="grid_4 val">
+            <select data-bind="datasource:com.bindCombobox('PaymentMode'),comboboxValue:wform.PaymentMode" class="z-txt easyui-combobox" data-options="editable:false,required:true" style="width: 110px"></select>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_2 lbl">发票号：</div>
+        <div class="grid_4 val">
+            <input type="text" data-bind="value:wform.InvoiceCode" class="z-txt easyui-validatebox" style="width: 102px" />
+        </div>
+        <div class="grid_2 lbl">支票号：</div>
+        <div class="grid_4 val">
+            <input type="text" data-bind="value:wform.CheckCode" class="z-txt easyui-validatebox" style="width: 102px" />
+        </div>
+        <div class="clear"></div>
+        <div class="grid_2 lbl">出纳员：</div>
+        <div class="grid_4 val">
+            <span data-bind="text:wform.Cashier"></span>
+        </div>
+        <div class="grid_2 lbl">操作时间：</div>
+        <div class="grid_4 val">
+            <span data-bind="text:wform.InputTime"></span>
+        </div>
+        <div class="clear"></div>
+        <div class="grid_2 lbl">备注：</div>
+        <div class="grid_6 val">
+            <textarea type="text" data-bind="value:wform.Remark" style="width: 180px; height: 40px" data-options="validType:'length[0,200]'"></textarea>
+        </div>
+
+        <div class="clear"></div>
+        <div style="text-align: center;margin-top: 10px">
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">保存</a>
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">关闭</a>
+        </div>
+
+    </div>
+</script>

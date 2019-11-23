@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section head {
+    <style type="text/css">
+        .grid_3 {
+            margin-top: 8px;
+            margin-bottom: 8px;
+            width: 78px;
+            height: 82px;
+            padding-top: 8px;
+        }
+
+        .center {
+            background-color: #eff6fe !important;
+        }
+
+        .container_16 a:hover {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .panel-tool {
+            display: none;
+        }
+
+        ul {
+            padding-top: 2px;
+        }
+
+            ul li {
+                padding-left: 18px;
+                line-height: 18px;
+                background: url('/Content/css/icon/icon/arrow_right_16.png') no-repeat;
+            }
+
+                ul li a {
+                    cursor: pointer;
+                }
+    </style>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            var data = parent.$("body", parent.document).data("menulist");
+            $('a').each(function () {
+                var that = $(this);
+                $.each(data || [], function () {
+                    if (this.URL == that.attr('url')) {
+                        that.attr('title', this.MenuName);
+                        that.attr('icon', this.IconClass);
+                    }
+                });
+            }).click(function () {
+                var that = $(this);
+                com.openTab(that.attr('title'), that.attr('url'), that.attr('icon'));
+            });
+
+            using('layout', function () {
+                var box = $("#layoutbox");
+                box.width($(window).width() - 4).height($(window).height() - 4).layout();
+                $(window).resize(function () { box.width($(window).width() - 4).height($(window).height() - 4).layout('resize'); });
+            });
+        });
+    </script>
+}
+
+<div id="layoutbox">
+    <div region="center" class="center">
+        <div class="container_16">
+
+            <div class="clear"></div>
+            @*
+                <a class="grid_3" url="/sys/receive/receive">
+                    <img src="~/Images/mms/收料单.jpg" alt="收料单" />
+                        <div>收料单</div>
+                    </a>*@
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div region="east" split="true" style="width:180px;overflow: hidden;">
+        <div id="right" class="easyui-layout" fit="true">
+            <div region="north" title="报表中心" style="height:200px" border="false" split="true" data-options="collapse:false">
+                <ul>
+                    <li>@*<a url="/sys/report/balanceaccount" title="收发存情况查询">收发存情况查询</a>*@</li>
+                </ul>
+            </div>
+
+            <div region="center" title="单据管理中心" border="false" split="true">
+                <ul>
+                    <li>@*<a url="/sys/receive/receiveedit" title="创建收料单">创建收料单</a>*@</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Area>
+  <settings name="MakeSeleList" defaultOrderBy='BookingInTime DESC,BillState DESC,BookingCode'>
+    <module>DMS_4S</module>
+    <select>
+      A.[BookingID],A.[BookingCode],A.[BookingName],A.[BookingInTime]
+      ,A.[BillTypeID],
+      dbo.f_Getcodename('优先度',A.PRI) PRI,
+      dbo.f_Getcodename('维修类型',A.BillTypeID) BillTypeName,
+      A.[RunDistance],A.BookingFashion,
+      A.[RepairDescribe],A.ArriveTime,A.StayExplain,A.StayTime,
+      A.[SignCode],A.[CustomerID],A.ArriveTime,C.CustomerName,C.MobileTel,
+      A.[RepairName],A.[RepairTel],A.[Address],A.[InputName],A.[InputTime],A.[BillState]
+    </select>
+    <from>
+      S_Booking AS A
+      LEFT JOIN B_Customer AS C ON A.CustomerID=C.CustomerID
+    </from>
+    <where defaultForAll='true' defaultCp='equal' defaultIgnoreEmpty='true' >
+      <field name='A.State' cp='equal' value='0'></field>
+      <field name='A.BookingID'  cp='equal'></field>
+      <field name='A.PRI'  cp='equal'></field>
+      <field name='A.BookingName'  cp='like'></field>
+      <field name='A.SignCode'  cp='like'></field>
+      <field name='A.BillTypeID'  cp='equal'></field>
+      <field name='A.BookingInTime'  cp='daterange'></field>
+      <field name='A.BillState'  cp='equal'></field>
+      <field name='A.CorpID'  cp='equal'></field>
+    </where>
+  </settings>
+</Area>
+

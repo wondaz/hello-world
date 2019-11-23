@@ -1,0 +1,98 @@
+﻿@{
+    ViewBag.Title = "车辆采购入库";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Car/CarIntoStoreEdit.js"></script>
+    <script type="text/javascript">
+        //using(['validatebox','combobox','datebox','numberbox','calendar']);
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var ViewModel = function() {
+            this.selfGrid = {
+            };
+            vms.search.apply(this, arguments);
+        }
+        var vm = new ViewModel(vdata);
+        ko.bindingViewModel(vm);
+    </script>
+}
+
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add1" title="入库" data-bind="click:saveClick">入库</a>
+</div>
+
+<div id="condition" class="container_12" style="position:relative;">
+    <div class="grid_12 val">
+        VIN：
+        <input id="txtVin" type="text" data-bind="value:form.VIN" class="z-txt easyui-validatebox easyui-autocomplete"
+               data-options="url:vdata.urls.vin" style="width: 150px" autocomplete="off" />
+    &nbsp;&nbsp;
+        <a id="a_search" href="#" class="easyui-linkbutton" data-bind="click:searchClick" icon="icon-search" style="margin:0 15px;">查询</a>
+    </div>
+    <div class="clear"></div>
+</div>
+<table id="gridlist" data-bind="datagrid:grid">
+    <thead>
+        <tr>
+            <th data-options="field:'CarType',align:'center',sortable:false, width:80">车辆类型</th>
+            <th data-options="field:'CarState',align:'center',sortable:true, width:80">车辆状态</th>
+            <th data-options="field:'VIN',align:'center',sortable:true, width:150">VIN码</th>
+            <th data-options="field:'BrandName',align:'center',sortable:true, width:80">品牌</th>
+            <th data-options="field:'SeriesName',align:'center',sortable:true, width:100">车系</th>
+            <th data-options="field:'ModelName',align:'center',sortable:true, width:170">车型</th>
+            <th data-options="field:'OutsideColor',align:'center',sortable:true, width:80">外观色</th>
+            <th data-options="field:'InsideColor',align:'center',sortable:true, width:80">内饰色</th>
+            <th data-options="field:'EngineCode',align:'center',sortable:true, width:120">发动机号</th>
+            <th data-options="field:'CostPrice',align:'right',sortable:true, width:80">成本价</th>
+        </tr>
+    </thead>
+</table>
+<div class="clear" style="margin-top:15px"></div>
+<div class="container_12" data-bind="inputwidth:150">
+
+    <div class="grid_1 lbl">入库类型：</div>
+    <div class="grid_2 val">
+        <input data-bind="datasource:com.bindCombobox('IntoStore'),comboboxValue:dform.InstockType" class="z-txt easyui-combobox" data-options="editable:false,required:true" readonly style="width:131px" />
+    </div>
+    <div class="grid_1 lbl">入库日期：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="dateboxValue:dform.InStockDate" class="z-txt easyui-datebox" data-options="editable:false,required:true" />
+    </div>
+
+    <div class="grid_1 lbl">仓库：</div>
+    <div class="grid_2 val">
+        <input type="text" data-bind="datasource:ds.warehouse,comboboxValue:dform.StockID" class="z-txt easyui-combobox" data-options="editable:false,required:true" style="width: 150px;" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">库位：</div>
+    <div class="grid_2 val">
+        <input data-bind="value:dform.InLocation" class="z-txt easyui-validatebox" data-options="validType:'length[0,20]'" />
+    </div>
+    @*<div class="grid_1 lbl">库管员：</div>
+        <div class="grid_3 val">
+            <span data-bind="text:dform.Keeper" />
+        </div>*@
+    <div class="grid_1 lbl">经办人：</div>
+    <div class="grid_2 val">
+        <input data-bind="value:dform.TransactMan" class="z-txt easyui-validatebox" />
+    </div>
+    <div class="grid_1 lbl">备注：</div>
+    <div class="grid_2 val">
+        <input data-bind="value:dform.RemarkHead" class="z-txt easyui-validatebox" />
+    </div>
+    <div class="clear"></div>
+    <div class="grid_1 lbl">入库单号：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:dform.InStockCode"></span>
+    </div>
+    <div class="grid_1 lbl">制单人：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:dform.InputName"></span>
+    </div>
+    <div class="grid_1 lbl">制单时间：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:dform.InputTime" formatter="com.formatTime"></span>
+    </div>
+
+</div>

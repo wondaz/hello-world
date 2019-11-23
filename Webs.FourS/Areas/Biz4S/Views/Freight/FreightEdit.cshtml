@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "运费索赔申请";
+    Layout = "~/Content/Layout/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Areas/Biz4S/JS/Freight/FreightEdit.js"></script>
+    <script type="text/javascript">
+        var vdata = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var vm = new viewModel(vdata);
+        ko.bindingViewModel(vm);
+        var view = function (id) {
+            com.dialog({
+                title: "查看附件",
+                width: 750,
+                height: 550,
+                maximizable: true,
+                html: '<iframe id="_view_sys_log_" scrolling="auto" frameborder="0"  style="width:99%;height:99%;"></iframe>',
+                viewModel: function (w) {
+                    w.find("iframe").attr("src", com.upload + id);
+                }
+            });
+        };
+        var formatAttachs = function (value) {
+            var html = '<a href="#" onclick=\'view("' + value + '")\'><span class="icon icon-search">&nbsp;</span>[查看]</a>';
+            html += '<a href="'+com.upload+value+'" style="margin-left:10px" target="_blank"><span class="icon icon-download">&nbsp;</span>[下载]</a>';
+            return html;
+        };
+
+    </script>
+}
+<div class="z-toolbar">
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-save" title="保存" status="0" data-bind="click:saveClick">保存</a>
+    <a href="#" plain="true" class="easyui-linkbutton" icon="icon-user-accept" title="提交" status="2" data-bind="click:saveClick">提交</a>
+    @*<a href="#" plain="true" class="easyui-linkbutton" icon="icon-undo" title="生成上月索赔单" status="0" data-bind="click:saveClick">生成上月索赔单</a>*@
+</div>
+<div id="master" class="container_16" data-bind="inputwidth:0.9">
+    <div class="grid_2 lbl">索赔单号：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.F_CostCode" class="lbl"></span>
+    </div>
+    <div class="grid_2 lbl"> 总运费(元)：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="numberboxValue:form.F_SumMoney" class="easyui-numberbox" data-options="required:true" style="width:120px" />
+    </div>
+    <div class="grid_2 lbl"> 联系电话：</div>
+    <div class="grid_2 val ">
+        <input type="text" data-bind="value:form.B_CorpTel" class="easyui-validatebox z-txt" data-options="required:true" />
+    </div>
+
+    <div class="grid_2 lbl">单据状态：</div>
+    <div class="grid_2 val">
+        <span data-bind="text:form.StatusName" class="lbl"></span>
+    </div>
+    <div class="clear"></div>
+    <div class="grid_2 lbl"> 申请说明：</div>
+    <div class="grid_6 val">
+        <textarea data-bind="value:form.F_Remark" style="width: 96%;height:40px" data-options="validType:'length[0,200]'"></textarea>
+    </div>
+    <div class="grid_2 lbl"> 厂家审核：</div>
+    <div class="grid_6 val">
+        <span data-bind="text:form.F_AuditRemark" class="lbl"></span>
+    </div>
+
+    <div class="clear"></div>
+</div>
+
+<div class="easyui-tabs">
+    <div title="旧件退回清单">
+        <div class="z-toolbar">
+            <a href="#" plain="true" class="easyui-linkbutton" icon="icon-add" title="添加旧件退回单号" data-bind="click:oldReturnClick">添加</a>
+            <a href="#" plain="true" gridindex="1" class="easyui-linkbutton" icon="icon-cut" title="删除" data-bind="click:deleteClick">删除</a>
+        </div>
+        <table data-bind="datagrid:grid1">
+            <thead>
+                <tr>
+                    <th data-options="field:'F_CarryName',align:'center',sortable:true, width:130">物流承运商</th>
+                    <th data-options="field:'F_CarryNumber',align:'center',sortable:true, width:130">物流单号</th>
+                    <th data-options="field:'F_Money',align:'right',sortable:true, width:120">物流费用（元）</th>
+                    <th data-options="field:'F_OldCode',align:'center',sortable:false, width:180">退回申请单号</th>
+                    @*<th data-options="field:'F_OldName',align:'center',sortable:true, width:140">旧件索赔时间</th>*@
+                    <th data-options="field:'F_OldTime',align:'center',sortable:true, width:140" formatter="com.formatDate">旧件退回时间</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div title="附件列表">
+        <div class="z-toolbar">
+            <table>
+                <tr>
+                    <td style="width:10px"></td>
+                    <td style="vertical-align:middle">
+                        @*<a href="#" plain="true" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:uploadFiles">上传</a>*@
+                        <input id="upload1" type="file" onchange="vm.uploadFiles()" style="width: 165px" />
+                    </td>
+                    <td style="width:10px"></td>
+                    <td>
+                        <a href="#" plain="true" gridindex="2" class="easyui-linkbutton" icon="icon-cut" title="删除" data-bind="click:deleteClick">删除</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <table data-bind="datagrid:grid2">
+            <thead>
+                <tr>
+                    @*<th data-options="field:'F_AttaCode',align:'center',sortable:false, width:120">附件编号</th>*@
+                    <th data-options="field:'F_AttaOriginName',align:'left',sortable:true, width:250">附件名称</th>
+                    @*<th data-options="field:'F_AttaType',align:'center',sortable:true, width:120">附件类型</th>*@
+                    <th data-options="field:'F_AttaUrl',align:'left',sortable:true, width:400">文件路径</th>
+                    <th data-options="field:'F_AttaSize',align:'right',sortable:false, width:80">文件大小</th>
+                    @*<th data-options="field:'F_AttaMeno',sortable:true,align:'right',width:200">备注</th>*@
+                    <th data-options="field:'F_AttaCusUrl',sortable:false,align:'center',width:200" formatter="formatAttachs">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+@*制单时间*@
+<div class="container_12" data-bind="inputwidth:0.9">
+    <div class="grid_3 val">
+        制单人：<span data-bind="text:form.F_InputName" class="lbl"></span>
+    </div>
+    <div class="grid_3 val">
+        制单时间：<span data-bind="text:form.F_InputTime" class="lbl"></span>
+    </div>
+    <div class="grid_3 val">
+        审核人：<span data-bind="text:form.F_AuditName" class="lbl"></span>
+    </div>
+    <div class="grid_3 val">
+        审核时间：<span data-bind="text:form.F_AuditTime" class="lbl"></span>
+    </div>
+</div>
+
+<script type="text/html" id="oldCode-template">
+    <style type="text/css">
+        .datagrid-wrap {
+            border-width: 0 0 1px 0;
+        }
+    </style>
+
+    <table data-bind="datagrid:grid3">
+        <thead>
+            <tr>
+                <th data-options=" field:'ck',checkbox:true,width:80"></th>
+                <th data-options="field:'F_CarryName',align:'center',sortable:true, width:100">物流承运商</th>
+                <th data-options="field:'F_DeliveryNumber',align:'center',sortable:true, width:120">物流单号</th>
+                <th data-options="field:'F_Money',align:'right',sortable:true, width:70">退回费用</th>
+                <th data-options="field:'F_OldPartsCode',align:'center',sortable:false, width:170">旧件退回单号</th>
+                <th data-options="field:'F_OldReturnTime',align:'center',sortable:true, width:100" formatter="com.formatDate">旧件退回时间</th>
+                @*<th data-options="field:'Nyear',align:'center',sortable:true, width:140">旧件索赔时间</th>*@
+
+            </tr>
+        </thead>
+    </table>
+
+    <div style="text-align: center; margin: 5px;">
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" data-bind="click:confirmClick" href="javascript:void(0)">确定</a>
+        <a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" data-bind="click:cancelClick" href="javascript:void(0)">取消</a>
+    </div>
+</script>
