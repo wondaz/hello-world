@@ -26,7 +26,7 @@ namespace Frame.Core
                 {
                     var rtnBefore = this.OnBeforeInsert(new InsertEventArgs() { db = dbContext, data = param.GetData() });
                     if (!rtnBefore) return;
-
+                    
                     var identity = ModelBase.GetAttributeFields<T, IdentityAttribute>();
                     result = identity.Count > 0 ? db.Sql(BuilderParse(param)).ExecuteReturnLastId<int>() : db.Sql(BuilderParse(param)).Execute();
 

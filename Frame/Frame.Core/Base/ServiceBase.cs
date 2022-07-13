@@ -3,6 +3,7 @@
  * 描述说明 ：定义数据服务基类
  ***************************************/
 
+using System;
 using System.Dynamic;
 using FluentData;
 
@@ -37,7 +38,7 @@ namespace Frame.Core
             {
                 db.Dispose();
             }
-            catch
+            catch(Exception ex)
             {
             }
         }
@@ -107,7 +108,9 @@ namespace Frame.Core
                 {
                     ModuleName = APP.DB_DEFAULT_CONN_NAME;
                 }
-                return _db ?? (_db = Db.Context(ModuleName));
+                _db = Db.Context(ModuleName);
+                return _db;
+                //return _db ?? (_db = Frame.Core.Db.Context(ModuleName));
             }
         }
 

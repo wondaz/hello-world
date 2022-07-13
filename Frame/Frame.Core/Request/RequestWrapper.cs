@@ -20,6 +20,7 @@ namespace Frame.Core
         
         public bool IsLoadedSettings { get { return !string.IsNullOrEmpty(settingXml); } }
 
+        //索引器
         public string this[string name]
         {
             get
